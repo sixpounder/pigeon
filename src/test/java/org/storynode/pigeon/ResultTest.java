@@ -1,10 +1,10 @@
 package org.storynode.pigeon;
 
-import org.junit.jupiter.api.Test;
-import org.storynode.pigeon.error.UnwrapException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
+import org.junit.jupiter.api.Test;
+import org.storynode.pigeon.error.UnwrapException;
 
 class ResultTest {
 
@@ -31,13 +31,26 @@ class ResultTest {
   }
 
   @Test
+  void from() {
+    assertThat(Result.of(() -> "Hello world"))
+        .as("Result from supplier")
+        .isEqualTo(Result.ok("Hello world"));
+    assertThat(
+            Result.of(() -> 8 / 0))
+        .as("Result from throwing supplier")
+        .returns(true, Result::isError);
+  }
+
+  @Test
   void map() {
     Result<Double, Object> obj = Result.ok(3.14D);
     Result<Double, Object> mapped = obj.map(v -> Math.pow(v, 2D));
     assertThat(mapped).as("Mapped value").satisfies(Result::isOk);
     assertThat(mapped.unwrap()).as("Mapped inner value").isEqualTo(Math.pow(3.14D, 2D));
 
-    assertThat(Result.ok(Math.PI).mapError(pi -> "The PI!")).as("Result::map with value").returns(Math.PI, Result::unwrap);
+    assertThat(Result.ok(Math.PI).mapError(pi -> "The PI!"))
+        .as("Result::map with value")
+        .returns(Math.PI, Result::unwrap);
   }
 
   @Test
@@ -47,18 +60,20 @@ class ResultTest {
     assertThat(mapped).as("Mapped value").satisfies(Result::isError);
     assertThat(mapped.unwrapError()).as("Mapped inner value").isEqualTo(Math.pow(3.14D, 2D));
 
-    assertThat(Result.error("THE ERROR").map(v -> "THE VALUE")).as("Result::map with error").returns("THE ERROR", Result::unwrapError);
+    assertThat(Result.error("THE ERROR").map(v -> "THE VALUE"))
+        .as("Result::map with error")
+        .returns("THE ERROR", Result::unwrapError);
   }
 
   @Test
   void tryUnwraps() {
     Result<Double, Object> obj = Result.ok(3.14D);
-    assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isNotNull();
-    assertThat(obj.tryUnwrapError()).as("Optionally unwrapped error").isNotNull();
+    assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isNotEmpty();
+    assertThat(obj.tryUnwrapError()).as("Optionally unwrapped error").isEmpty();
 
     Result<Double, Object> obj2 = Result.error(3.14D);
-    assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isNotNull();
-    assertThat(obj.tryUnwrapError()).as("Optionally unwrapped error").isNotNull();
+    assertThat(obj2.tryUnwrap()).as("Optionally unwrapped").isEmpty();
+    assertThat(obj2.tryUnwrapError()).as("Optionally unwrapped error").isNotEmpty();
   }
 
   @Test
@@ -69,7 +84,23 @@ class ResultTest {
 
   @Test
   void orElseGet() {
-    assertThat(Result.ok(Math.PI).orElseGet(() -> 1D)).as("Extracted value with default").isEqualTo(Math.PI);
-    assertThat(Result.error(Math.PI).orElseGet(() -> 1D)).as("Extracted value with default").isEqualTo(1D);
+    assertThat(Result.ok(Math.PI).orElseGet(() -> 1D))
+        .as("Extracted value with default")
+        .isEqualTo(Math.PI);
+    assertThat(Result.error(Math.PI).orElseGet(() -> 1D))
+        .as("Extracted value with default")
+        .isEqualTo(1D);
+  }
+
+  @Test
+  void isOkAnd() {
+    assertThat(Result.ok("Hello world").isOkAnd(v -> v.length() == 11)).as("Composited predicate on value").isTrue();
+    assertThat(Result.error("Hello world").isOkAnd(v -> true)).as("Composited predicate on value when error").isFalse();
+  }
+
+  @Test
+  void isErrorAnd() {
+    assertThat(Result.error("Hello world").isErrorAnd(v -> v.length() == 11)).as("Composited predicate on error").isTrue();
+    assertThat(Result.ok("Hello world").isErrorAnd(v -> true)).as("Composited predicate on error when ok").isFalse();
   }
 }
