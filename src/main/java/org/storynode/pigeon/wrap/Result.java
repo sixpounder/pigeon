@@ -208,11 +208,12 @@ public class Result<T, E> implements Wrapped<T> {
   }
 
   /**
-   * The non-throwing variant of {@link #unwrap()}. This is guaranteed to never throw and to always
-   * return a non-null value.
+   * The non-throwing variant of {@link Wrapped#unwrap()}. This is guaranteed to never throw and to
+   * always return a non-null value.
    *
    * @return An {@link java.util.Optional} containing the value, or empty if there is none
    */
+  @Override
   public @NotNull Optional<T> tryUnwrap() {
     return Optional.ofNullable(this.inner);
   }

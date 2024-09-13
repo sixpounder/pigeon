@@ -15,10 +15,12 @@ import org.storynode.pigeon.wrap.Result;
 @UtilityClass
 public class NeverThrow {
   /**
-   * executing.
+   * Runs the given function and returns a {@link Result} describing its outcome
    *
-   * @param func a {@link java.lang.Runnable} object
-   * @return a {@link org.storynode.pigeon.wrap.Result} object
+   * @param func a function to run
+   * @return a {@link org.storynode.pigeon.wrap.Result} object that will contain an empty {@link
+   *     Optional} if the execution completed nominally or the error thrown if completed
+   *     exceptionally.
    */
   public static @NotNull Result<Optional<Void>, ? extends Throwable> executing(Runnable func) {
     try {
@@ -30,11 +32,12 @@ public class NeverThrow {
   }
 
   /**
-   * executing.
+   * Runs the given function and returns a {@link Result} with the function returned value
    *
-   * @param func a {@link java.util.function.Supplier} object
-   * @param <T> a T class
-   * @return a {@link org.storynode.pigeon.wrap.Result} object
+   * @param func a function to run
+   * @param <T> the type of the return value
+   * @return a {@link org.storynode.pigeon.wrap.Result} object that will contain the function return
+   *     value if the execution completed nominally or the error thrown if completed exceptionally.
    */
   public static <T> @NotNull Result<T, ? extends Throwable> executing(Supplier<T> func) {
     return Result.of(func);
