@@ -1,4 +1,4 @@
-package org.storynode.pigeon;
+package org.storynode.pigeon.wrap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -35,8 +35,7 @@ class ResultTest {
     assertThat(Result.of(() -> "Hello world"))
         .as("Result from supplier")
         .isEqualTo(Result.ok("Hello world"));
-    assertThat(
-            Result.of(() -> 8 / 0))
+    assertThat(Result.of(() -> 8 / 0))
         .as("Result from throwing supplier")
         .returns(true, Result::isError);
   }
@@ -94,13 +93,21 @@ class ResultTest {
 
   @Test
   void isOkAnd() {
-    assertThat(Result.ok("Hello world").isOkAnd(v -> v.length() == 11)).as("Composited predicate on value").isTrue();
-    assertThat(Result.error("Hello world").isOkAnd(v -> true)).as("Composited predicate on value when error").isFalse();
+    assertThat(Result.ok("Hello world").isOkAnd(v -> v.length() == 11))
+        .as("Composited predicate on value")
+        .isTrue();
+    assertThat(Result.error("Hello world").isOkAnd(v -> true))
+        .as("Composited predicate on value when error")
+        .isFalse();
   }
 
   @Test
   void isErrorAnd() {
-    assertThat(Result.error("Hello world").isErrorAnd(v -> v.length() == 11)).as("Composited predicate on error").isTrue();
-    assertThat(Result.ok("Hello world").isErrorAnd(v -> true)).as("Composited predicate on error when ok").isFalse();
+    assertThat(Result.error("Hello world").isErrorAnd(v -> v.length() == 11))
+        .as("Composited predicate on error")
+        .isTrue();
+    assertThat(Result.ok("Hello world").isErrorAnd(v -> true))
+        .as("Composited predicate on error when ok")
+        .isFalse();
   }
 }
