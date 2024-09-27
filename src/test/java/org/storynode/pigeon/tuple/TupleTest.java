@@ -2,9 +2,9 @@ package org.storynode.pigeon.tuple;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
+import org.storynode.pigeon.option.Option;
 
 class TupleTest {
 
@@ -35,9 +35,9 @@ class TupleTest {
   @Test
   void at() {
     Tuple t = Tuple.of(1, "Hello", new Object(), new Pair<>(10, 9), 7D);
-    assertThat(t.at(0)).as("First element").contains(1);
-    assertThat(t.at(3)).as("Fourth element").contains(Pair.of(10, 9));
-    assertThat(t.at(100)).as("Non existing element").isEmpty();
+    assertThat(t.at(0)).as("First element").returns(1, Option::unwrap);
+    assertThat(t.at(3)).as("Fourth element").returns(Pair.of(10, 9), Option::unwrap);
+    assertThat(t.at(100)).as("Non existing element").returns(true, Option::isNone);
   }
 
   @Test
@@ -55,7 +55,7 @@ class TupleTest {
     AtomicInteger counter = new AtomicInteger();
     for (Pair<Object, Integer> entry : tuple.enumerate()) {
       var current = counter.getAndIncrement();
-      assertThat(entry.first()).as("Element value").isEqualTo(Optional.of(expected[current]));
+      assertThat(entry.first()).as("Element value").isEqualTo(Option.of(expected[current]));
       assertThat(entry.second()).as("Element index").isEqualTo(current);
     }
 

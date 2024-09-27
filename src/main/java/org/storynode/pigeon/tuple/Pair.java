@@ -1,8 +1,8 @@
 package org.storynode.pigeon.tuple;
 
 import java.util.Objects;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.storynode.pigeon.option.Option;
 
 /**
  * Pair class.
@@ -35,11 +35,11 @@ public final class Pair<T1, T2> extends Tuple {
 
   /** {@inheritDoc} */
   @Override
-  public @NotNull Optional<Object> at(int index) {
+  public @NotNull Option<Object> at(int index) {
     return switch (index) {
-      case 0 -> Optional.of(this.first);
-      case 1 -> Optional.of(this.second);
-      default -> Optional.empty();
+      case 0 -> Option.of(this.first);
+      case 1 -> Option.of(this.second);
+      default -> Option.none();
     };
   }
 

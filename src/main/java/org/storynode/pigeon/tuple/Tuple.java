@@ -1,10 +1,10 @@
 package org.storynode.pigeon.tuple;
 
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.storynode.pigeon.option.Option;
 
 /**
  * A tuple may be defined in many ways, but simply speaking it's a finite, heterogeneous sequence of
@@ -95,9 +95,10 @@ public abstract class Tuple {
    * The n-th item in the tuple
    *
    * @param index the 0-based index that identifies the item position
-   * @return An optional containing the item at the given position or empty if none is found
+   * @return {@link org.storynode.pigeon.option.Some} item at the given position or {@link
+   *     org.storynode.pigeon.option.None} if item is found
    */
-  abstract @NotNull Optional<Object> at(int index);
+  abstract @NotNull Option<Object> at(int index);
 
   /**
    * Enumerates the items in this tuple

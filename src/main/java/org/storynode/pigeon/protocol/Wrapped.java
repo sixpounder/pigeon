@@ -1,7 +1,7 @@
-package org.storynode.pigeon.wrap;
+package org.storynode.pigeon.protocol;
 
-import java.util.Optional;
 import org.storynode.pigeon.error.UnwrapException;
+import org.storynode.pigeon.option.Option;
 
 /**
  * A type that serves as a wrapper for a given value that allows accessing that value.
@@ -16,21 +16,22 @@ public interface Wrapped<T> {
    * org.storynode.pigeon.error.UnwrapException} if the specific implementors requires so.
    *
    * @return The wrapped value
+   * @throws org.storynode.pigeon.error.UnwrapException if any.
    */
   T unwrap() throws UnwrapException;
 
   /**
-   * The non-throwing variant of {@link Wrapped#unwrap()}. This is guaranteed to never throw and to
-   * always return a non-null value.
+   * The non-throwing variant of {@link org.storynode.pigeon.protocol.Wrapped#unwrap()}. This is
+   * guaranteed to never throw and to always return a non-null value.
    *
-   * @return An {@link java.util.Optional} containing the value, or empty if there is none or if an
-   *     error would be raised while unwrapping said value.
+   * @return An {@link org.storynode.pigeon.option.Option} containing the value, or empty if there
+   *     is none or if an error would be raised while unwrapping said value.
    */
-  default Optional<T> tryUnwrap() {
+  default Option<T> tryUnwrap() {
     try {
-      return Optional.ofNullable(unwrap());
+      return Option.some(unwrap());
     } catch (UnwrapException unwrapException) {
-      return Optional.empty();
+      return Option.none();
     }
   }
 }

@@ -1,8 +1,11 @@
-package org.storynode.pigeon.wrap;
+package org.storynode.pigeon.result;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.storynode.pigeon.option.OptionAssert.assertThat;
+import static org.storynode.pigeon.result.ResultAssert.assertThat;
 
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.storynode.pigeon.error.UnwrapException;
 
@@ -31,7 +34,7 @@ class ResultTest {
   }
 
   @Test
-  void from() {
+  void of_static() {
     assertThat(Result.of(() -> "Hello world"))
         .as("Result from supplier")
         .isEqualTo(Result.ok("Hello world"));
@@ -41,10 +44,18 @@ class ResultTest {
   }
 
   @Test
+  void of_throwing() {
+    assertThat(Result.of(DummyThrower::buggedMethod))
+        .as("Result from throwing supplier")
+        .isError()
+        .returns(IOException.class, r -> r.unwrapError().getClass());
+  }
+
+  @Test
   void map() {
     Result<Double, Object> obj = Result.ok(3.14D);
     Result<Double, Object> mapped = obj.map(v -> Math.pow(v, 2D));
-    assertThat(mapped).as("Mapped value").satisfies(Result::isOk);
+    assertThat(mapped).as("Mapped value").isOk();
     assertThat(mapped.unwrap()).as("Mapped inner value").isEqualTo(Math.pow(3.14D, 2D));
 
     assertThat(Result.ok(Math.PI).mapError(pi -> "The PI!"))
@@ -56,7 +67,7 @@ class ResultTest {
   void mapError() {
     Result<Double, Double> obj = Result.error(3.14D);
     Result<Double, Double> mapped = obj.mapError(v -> Math.pow(v, 2D));
-    assertThat(mapped).as("Mapped value").satisfies(Result::isError);
+    assertThat(mapped).as("Mapped value").isError();
     assertThat(mapped.unwrapError()).as("Mapped inner value").isEqualTo(Math.pow(3.14D, 2D));
 
     assertThat(Result.error("THE ERROR").map(v -> "THE VALUE"))
@@ -109,5 +120,11 @@ class ResultTest {
     assertThat(Result.ok("Hello world").isErrorAnd(v -> true))
         .as("Composited predicate on error when ok")
         .isFalse();
+  }
+
+  private class DummyThrower {
+    public static Object buggedMethod() throws IOException {
+      throw new IOException("Some IO error occurred here");
+    }
   }
 }

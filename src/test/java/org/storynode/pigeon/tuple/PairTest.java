@@ -2,8 +2,8 @@ package org.storynode.pigeon.tuple;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.storynode.pigeon.option.Option;
 
 class PairTest {
 
@@ -15,10 +15,10 @@ class PairTest {
   @Test
   void at() {
     Pair<Integer, Integer> pair = new Pair<>(1, 2);
-    assertThat(pair.at(0)).as("Index 0").isEqualTo(Optional.of(1));
-    assertThat(pair.at(1)).as("Index 1").isEqualTo(Optional.of(2));
-    assertThat(pair.at(2)).as("Index out of range").isEqualTo(Optional.empty());
-    assertThat(pair.at(100)).as("Index WAY out of range").isEqualTo(Optional.empty());
+    assertThat(pair.at(0)).as("Index 0").isEqualTo(Option.of(1));
+    assertThat(pair.at(1)).as("Index 1").isEqualTo(Option.of(2));
+    assertThat(pair.at(2)).as("Index out of range").isEqualTo(Option.none());
+    assertThat(pair.at(100)).as("Index WAY out of range").isEqualTo(Option.none());
   }
 
   @Test

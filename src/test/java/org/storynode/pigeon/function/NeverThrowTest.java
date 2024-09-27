@@ -1,10 +1,10 @@
 package org.storynode.pigeon.function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.storynode.pigeon.option.None.none;
 
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
-import org.storynode.pigeon.wrap.Result;
+import org.storynode.pigeon.result.Result;
 
 class NeverThrowTest {
 
@@ -22,7 +22,7 @@ class NeverThrowTest {
         .as("Run result")
         .isNotNull()
         .returns(true, Result::isOk)
-        .returns(Optional.empty(), Result::unwrap);
+        .returns(none(), Result::unwrap);
 
     assertThat(
             NeverThrow.executing(

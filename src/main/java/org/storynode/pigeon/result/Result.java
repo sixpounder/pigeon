@@ -1,7 +1,6 @@
-package org.storynode.pigeon.wrap;
+package org.storynode.pigeon.result;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -9,6 +8,9 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
+import org.storynode.pigeon.option.Option;
+import org.storynode.pigeon.protocol.ThrowingSupplier;
+import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.tuple.Pair;
 
 /**
@@ -51,29 +53,10 @@ import org.storynode.pigeon.tuple.Pair;
  * @author Andrea Coronese
  * @since 1.0.0
  */
-public class Result<T, E> implements Wrapped<T> {
-  private final T inner;
-  private final E error;
+public abstract class Result<T, E> implements Wrapped<T> {
 
   /**
-   * Constructs a new {@link Result} with the given couple of values. These values must be mutually
-   * exclusively non-null, and at least one of them must be non-null.
-   *
-   * @param inner The value of the ok result
-   * @param error The value of the error
-   * @throws IllegalArgumentException if either both values are null or both values are non-null
-   */
-  private Result(T inner, E error) {
-    if (inner != null ^ error != null) {
-      this.inner = inner;
-      this.error = error;
-    } else {
-      throw new IllegalArgumentException("Inner value and error cannot be both null or non null");
-    }
-  }
-
-  /**
-   * Constructs an ok variant of a {@link org.storynode.pigeon.wrap.Result}
+   * Constructs an ok variant of a {@link org.storynode.pigeon.result.Result}
    *
    * @param inner The value of the result for the ok state
    * @return The constructed result
@@ -82,11 +65,11 @@ public class Result<T, E> implements Wrapped<T> {
    */
   @Contract(value = "_ -> new", pure = true)
   public static <T, E> @NotNull Result<T, E> ok(@NotNull T inner) {
-    return new Result<>(Objects.requireNonNull(inner), null);
+    return new Ok<>(Objects.requireNonNull(inner));
   }
 
   /**
-   * Constructs an error variant of a {@link org.storynode.pigeon.wrap.Result}
+   * Constructs an error variant of a {@link org.storynode.pigeon.result.Result}
    *
    * @param error The value of the result for the error state
    * @return The constructed result
@@ -95,37 +78,35 @@ public class Result<T, E> implements Wrapped<T> {
    */
   @Contract(value = "_ -> new", pure = true)
   public static <T, E> @NotNull Result<T, E> error(@NotNull E error) {
-    return new Result<>(null, Objects.requireNonNull(error));
+    return new Err<>(Objects.requireNonNull(error));
   }
 
   /**
-   * Constructs a new {@link org.storynode.pigeon.wrap.Result} by using the provided function return
-   * value. If the supplier completes exceptionally, the {@link org.storynode.pigeon.wrap.Result}
-   * will contain the caught exception as error
+   * Constructs a new {@link org.storynode.pigeon.result.Result} by using the provided function
+   * return value. If the supplier completes exceptionally, the {@link
+   * org.storynode.pigeon.result.Result} will contain the caught exception as error
    *
    * @param fn The function to execute to obtain the value of the result
-   * @return A {@link org.storynode.pigeon.wrap.Result} with a value or an error, depending on the
+   * @return A {@link org.storynode.pigeon.result.Result} with a value or an error, depending on the
    *     function execution
    * @param <T> The type of the contained value
    */
-  public static <T> @NotNull Result<T, ? extends Throwable> of(Supplier<T> fn) {
+  public static <T> @NotNull Result<T, ? extends Throwable> of(ThrowingSupplier<T> fn) {
     try {
-      return Result.ok(fn.get());
+      return Result.ok(fn.getWithException());
     } catch (Throwable throwable) {
       return Result.error(throwable);
     }
   }
 
   /**
-   * Whether this {@link org.storynode.pigeon.wrap.Result} is ok, meaning it contains a value and
+   * Whether this {@link org.storynode.pigeon.result.Result} is ok, meaning it contains a value and
    * not an error
    *
    * @return <code>true</code> if this contains an ok value, <code>false</code> if it contains an
    *     error
    */
-  public boolean isOk() {
-    return this.inner != null;
-  }
+  public abstract boolean isOk();
 
   /**
    * Returns <code>true</code> if the result contains a value and that value satisfies a <code>
@@ -139,12 +120,12 @@ public class Result<T, E> implements Wrapped<T> {
   }
 
   /**
-   * Whether this {@link org.storynode.pigeon.wrap.Result} is an error
+   * Whether this {@link org.storynode.pigeon.result.Result} is an error
    *
    * @return <code>true</code> if this contains an error, <code>false</code> if it contains a value
    */
   public boolean isError() {
-    return this.error != null;
+    return !this.isOk();
   }
 
   /**
@@ -165,13 +146,7 @@ public class Result<T, E> implements Wrapped<T> {
    * @return The inner value
    * @throws org.storynode.pigeon.error.UnwrapException if this contains an error
    */
-  public T unwrap() throws UnwrapException {
-    if (this.isError()) {
-      throw new UnwrapException("Cannot unwrap: not an ok value");
-    }
-
-    return this.inner;
-  }
+  public abstract T unwrap() throws UnwrapException;
 
   /**
    * Unwraps and return the inner error, if present. Throws an error if this result contains a
@@ -179,13 +154,7 @@ public class Result<T, E> implements Wrapped<T> {
    *
    * @return The inner error
    */
-  public E unwrapError() {
-    if (this.isOk()) {
-      throw new UnwrapException("Cannot unwrap error: not an error value");
-    }
-
-    return this.error;
-  }
+  public abstract E unwrapError();
 
   /**
    * Unwraps the contained value, or returns a default one if this contains an error
@@ -208,24 +177,33 @@ public class Result<T, E> implements Wrapped<T> {
   }
 
   /**
-   * The non-throwing variant of {@link Wrapped#unwrap()}. This is guaranteed to never throw and to
-   * always return a non-null value.
+   * {@inheritDoc}
    *
-   * @return An {@link java.util.Optional} containing the value, or empty if there is none
+   * <p>The non-throwing variant of {@link Wrapped#unwrap()}. This is guaranteed to never throw and
+   * to always return a non-null value.
    */
   @Override
-  public @NotNull Optional<T> tryUnwrap() {
-    return Optional.ofNullable(this.inner);
+  public @NotNull Option<T> tryUnwrap() {
+    if (this.isOk()) {
+      return Option.some(this.unwrap());
+    } else {
+      return Option.none();
+    }
   }
 
   /**
    * The non-throwing variant of {@link #unwrapError()}. This is guaranteed to never throw and to
    * always return a non-null value.
    *
-   * @return An {@link java.util.Optional} containing the error, or empty if there is none
+   * @return An {@link org.storynode.pigeon.option.Option} containing the error, or empty if there
+   *     is none
    */
-  public @NotNull Optional<E> tryUnwrapError() {
-    return Optional.ofNullable(this.error);
+  public @NotNull Option<E> tryUnwrapError() {
+    if (this.isOk()) {
+      return Option.none();
+    } else {
+      return Option.some(this.unwrapError());
+    }
   }
 
   /**
@@ -240,7 +218,7 @@ public class Result<T, E> implements Wrapped<T> {
    * </pre>
    *
    * @param fn The function to apply to the value
-   * @return The mapped {@link org.storynode.pigeon.wrap.Result}
+   * @return The mapped {@link org.storynode.pigeon.result.Result}
    * @param <U> The type of the new value
    */
   public <U> Result<U, E> map(Function<T, U> fn) {
@@ -257,7 +235,7 @@ public class Result<T, E> implements Wrapped<T> {
    * used to compose the result of two functions
    *
    * @param fn The function to apply to the error
-   * @return The mapped {@link org.storynode.pigeon.wrap.Result}
+   * @return The mapped {@link org.storynode.pigeon.result.Result}
    * @param <U> The type of the new error
    */
   public <U> Result<T, U> mapError(Function<E, U> fn) {
@@ -312,7 +290,11 @@ public class Result<T, E> implements Wrapped<T> {
    * @return The constructed tuple
    */
   public Pair<T, E> toTuple() {
-    return new Pair<>(inner, error);
+    if (this.isOk()) {
+      return new Pair<>(unwrap(), null);
+    } else {
+      return new Pair<>(null, unwrapError());
+    }
   }
 
   /** {@inheritDoc} */
@@ -326,7 +308,8 @@ public class Result<T, E> implements Wrapped<T> {
       return false;
     }
 
-    Result<?, ?> result = (Result<?, ?>) other;
-    return Objects.equals(inner, result.inner) && Objects.equals(error, result.error);
+    Result<?, ?> otherResult = (Result<?, ?>) other;
+    return (otherResult.isOk() && isOk() && unwrap().equals(otherResult.unwrap()))
+        || (otherResult.isError() && isError() && unwrapError().equals(otherResult.unwrapError()));
   }
 }

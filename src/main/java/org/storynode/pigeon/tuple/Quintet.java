@@ -1,8 +1,8 @@
 package org.storynode.pigeon.tuple;
 
 import java.util.Objects;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.storynode.pigeon.option.Option;
 
 /**
  * Quintet class.
@@ -92,14 +92,14 @@ public final class Quintet<T1, T2, T3, T4, T5> extends Tuple {
 
   /** {@inheritDoc} */
   @Override
-  public @NotNull Optional<Object> at(int index) {
+  public @NotNull Option<Object> at(int index) {
     return switch (index) {
-      case 0 -> Optional.of(this.first);
-      case 1 -> Optional.of(this.second);
-      case 2 -> Optional.of(this.third);
-      case 3 -> Optional.of(this.fourth);
-      case 4 -> Optional.of(this.fifth);
-      default -> Optional.empty();
+      case 0 -> Option.of(this.first);
+      case 1 -> Option.of(this.second);
+      case 2 -> Option.of(this.third);
+      case 3 -> Option.of(this.fourth);
+      case 4 -> Option.of(this.fifth);
+      default -> Option.none();
     };
   }
 

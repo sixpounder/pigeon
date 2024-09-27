@@ -6,6 +6,8 @@ import java.util.Map;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.function.NeverThrow;
+import org.storynode.pigeon.protocol.Wrapped;
+import org.storynode.pigeon.result.Result;
 import org.storynode.pigeon.tuple.Pair;
 
 /**
@@ -21,19 +23,19 @@ public class Metadata<T> implements Wrapped<T> {
 
   /**
    * Tries to create a {@link org.storynode.pigeon.wrap.Metadata} instance from another {@link
-   * org.storynode.pigeon.wrap.Wrapped} value. Since {@link Wrapped#unwrap()} can fail in some
-   * implementations (like in {@link org.storynode.pigeon.wrap.Result}) this returns a {@link
-   * org.storynode.pigeon.wrap.Result} containing the {@link
+   * Wrapped} value. Since {@link org.storynode.pigeon.protocol.Wrapped#unwrap()} can fail in some
+   * implementations (like in {@link Result}) this returns a {@link
+   * org.storynode.pigeon.result.Result} containing the {@link
    * org.storynode.pigeon.error.UnwrapException} obtained when unwrapping the originally wrapped
    * value, if any is thrown. <br>
-   * If the original {@link org.storynode.pigeon.wrap.Wrapped} is already a {@link
+   * If the original {@link org.storynode.pigeon.protocol.Wrapped} is already a {@link
    * org.storynode.pigeon.wrap.Metadata} instance then its metadata will be copied into the new
    * instance.
    *
    * @param wrapped The source wrapped value
    * @param <T> The type of the value
    * @return A {@link org.storynode.pigeon.wrap.Metadata} instance with the original value that was
-   *     {@link org.storynode.pigeon.wrap.Wrapped}
+   *     {@link org.storynode.pigeon.protocol.Wrapped}
    */
   public static <T> @NotNull Result<Metadata<T>, ? extends Throwable> from(
       @NotNull Wrapped<T> wrapped) {
@@ -42,12 +44,12 @@ public class Metadata<T> implements Wrapped<T> {
 
   /**
    * Tries to create a {@link org.storynode.pigeon.wrap.Metadata} instance from another {@link
-   * org.storynode.pigeon.wrap.Wrapped} value. Since {@link Wrapped#unwrap()} can fail in some
-   * implementations (like in {@link org.storynode.pigeon.wrap.Result}) this returns a {@link
-   * org.storynode.pigeon.wrap.Result} containing the {@link
+   * Wrapped} value. Since {@link org.storynode.pigeon.protocol.Wrapped#unwrap()} can fail in some
+   * implementations (like in {@link Result}) this returns a {@link
+   * org.storynode.pigeon.result.Result} containing the {@link
    * org.storynode.pigeon.error.UnwrapException} obtained when unwrapping the originally wrapped
    * value, if any is thrown. <br>
-   * If the original {@link org.storynode.pigeon.wrap.Wrapped} is already a {@link
+   * If the original {@link org.storynode.pigeon.protocol.Wrapped} is already a {@link
    * org.storynode.pigeon.wrap.Metadata} instance then its metadata will be copied into the new
    * instance.
    *
@@ -55,7 +57,7 @@ public class Metadata<T> implements Wrapped<T> {
    * @param additionalMetadata Metadata to add
    * @param <T> The type of the value
    * @return A {@link org.storynode.pigeon.wrap.Metadata} instance with the original value that was
-   *     {@link org.storynode.pigeon.wrap.Wrapped}
+   *     {@link org.storynode.pigeon.protocol.Wrapped}
    */
   public static <T> @NotNull Result<Metadata<T>, ? extends Throwable> from(
       @NotNull Wrapped<T> wrapped, Map<Object, Object> additionalMetadata) {

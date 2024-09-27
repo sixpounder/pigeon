@@ -1,10 +1,12 @@
 package org.storynode.pigeon.function;
 
-import java.util.Optional;
-import java.util.function.Supplier;
+import static org.storynode.pigeon.option.None.none;
+
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
-import org.storynode.pigeon.wrap.Result;
+import org.storynode.pigeon.option.None;
+import org.storynode.pigeon.protocol.ThrowingSupplier;
+import org.storynode.pigeon.result.Result;
 
 /**
  * Static functions for exception-less execution
@@ -15,31 +17,34 @@ import org.storynode.pigeon.wrap.Result;
 @UtilityClass
 public class NeverThrow {
   /**
-   * Runs the given function and returns a {@link Result} describing its outcome
+   * Runs the given function and returns a {@link org.storynode.pigeon.result.Result} describing its
+   * outcome
    *
    * @param func a function to run
-   * @return a {@link org.storynode.pigeon.wrap.Result} object that will contain an empty {@link
-   *     Optional} if the execution completed nominally or the error thrown if completed
-   *     exceptionally.
+   * @return a {@link org.storynode.pigeon.result.Result} object that will contain an empty {@link
+   *     org.storynode.pigeon.option.Option} if the execution completed nominally or the error
+   *     thrown if completed exceptionally.
    */
-  public static @NotNull Result<Optional<Void>, ? extends Throwable> executing(Runnable func) {
+  public static @NotNull Result<None<?>, Exception> executing(Runnable func) {
     try {
       func.run();
-      return Result.ok(Optional.empty());
-    } catch (Throwable e) {
+      return Result.ok(none());
+    } catch (Exception e) {
       return Result.error(e);
     }
   }
 
   /**
-   * Runs the given function and returns a {@link Result} with the function returned value
+   * Runs the given function and returns a {@link org.storynode.pigeon.result.Result} with the
+   * function returned value
    *
    * @param func a function to run
    * @param <T> the type of the return value
-   * @return a {@link org.storynode.pigeon.wrap.Result} object that will contain the function return
-   *     value if the execution completed nominally or the error thrown if completed exceptionally.
+   * @return a {@link org.storynode.pigeon.result.Result} object that will contain the function
+   *     return value if the execution completed nominally or the error thrown if completed
+   *     exceptionally.
    */
-  public static <T> @NotNull Result<T, ? extends Throwable> executing(Supplier<T> func) {
+  public static <T> @NotNull Result<T, ? extends Throwable> executing(ThrowingSupplier<T> func) {
     return Result.of(func);
   }
 }
