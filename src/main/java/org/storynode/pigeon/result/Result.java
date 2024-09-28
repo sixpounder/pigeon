@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
 import org.storynode.pigeon.option.Option;
+import org.storynode.pigeon.protocol.SafelyWrapped;
 import org.storynode.pigeon.protocol.ThrowingSupplier;
 import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.tuple.Pair;
@@ -21,16 +22,16 @@ import org.storynode.pigeon.tuple.Pair;
  *
  * <h3>Known variant construction</h3>
  *
- * An ok result with the value "Hello world"
+ * An {@link Ok} result with the value "Hello world"
  *
  * <pre>
  * {@code Result.ok("Hello world")}
  * </pre>
  *
- * An error result with the error value set to 45D
+ * An {@link Err} result with the error value set to 45D
  *
  * <pre>
- * {@code Result.error(45D)}
+ * {@code Result.err(45D)}
  * </pre>
  *
  * <h3>Construct by execution</h3>
@@ -41,8 +42,8 @@ import org.storynode.pigeon.tuple.Pair;
  * {@code Result.of(() -> httpGet("https://www.wikipedia.com")).map(Response:getBody)}
  * </pre>
  *
- * This would result in an error result with its error value set to the instance of the exception
- * caught when running the provided function
+ * This would result in an {@link Err} result with its error value set to the instance of the
+ * exception caught when running the provided function
  *
  * <pre>
  * {@code Result.of(() -> 8 / 0)}
@@ -53,10 +54,10 @@ import org.storynode.pigeon.tuple.Pair;
  * @author Andrea Coronese
  * @since 1.0.0
  */
-public abstract class Result<T, E> implements Wrapped<T> {
+public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
 
   /**
-   * Constructs an ok variant of a {@link org.storynode.pigeon.result.Result}
+   * Constructs an ok variant of a {@link org.storynode.pigeon.result.Result}.
    *
    * @param inner The value of the result for the ok state
    * @return The constructed result
@@ -77,8 +78,21 @@ public abstract class Result<T, E> implements Wrapped<T> {
    * @param <E> The type of the error value
    */
   @Contract(value = "_ -> new", pure = true)
-  public static <T, E> @NotNull Result<T, E> error(@NotNull E error) {
+  public static <T, E> @NotNull Result<T, E> err(@NotNull E error) {
     return new Err<>(Objects.requireNonNull(error));
+  }
+
+  /**
+   * Constructs an error variant of a {@link org.storynode.pigeon.result.Result}
+   *
+   * @param error The value of the result for the error state
+   * @return The constructed result
+   * @param <T> The type of the ok value
+   * @param <E> The type of the error value
+   */
+  @Contract(value = "_ -> new", pure = true)
+  public static <T, E> @NotNull Result<T, E> error(@NotNull E error) {
+    return err(error);
   }
 
   /**

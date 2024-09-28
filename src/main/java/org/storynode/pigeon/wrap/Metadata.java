@@ -6,6 +6,7 @@ import java.util.Map;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.function.NeverThrow;
+import org.storynode.pigeon.protocol.SafelyWrapped;
 import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.result.Result;
 import org.storynode.pigeon.tuple.Pair;
@@ -17,7 +18,7 @@ import org.storynode.pigeon.tuple.Pair;
  * @author Andrea Coronese
  * @since 1.0.0
  */
-public class Metadata<T> implements Wrapped<T> {
+public class Metadata<T> implements Wrapped<T>, SafelyWrapped<T> {
   @Getter private final Map<Object, Object> metadata;
   private final @NotNull T inner;
 

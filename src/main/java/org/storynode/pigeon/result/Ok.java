@@ -2,7 +2,6 @@ package org.storynode.pigeon.result;
 
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
-import org.storynode.pigeon.protocol.Wrapped;
 
 /**
  * {@link Result} variant for ok values.
@@ -11,7 +10,7 @@ import org.storynode.pigeon.protocol.Wrapped;
  * @see Result
  * @author Andrea Coronese
  */
-public class Ok<T, E> extends Result<T, E> implements Wrapped<T> {
+public class Ok<T, E> extends Result<T, E> {
   private final T inner;
 
   /**
