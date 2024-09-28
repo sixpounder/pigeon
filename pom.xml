@@ -6,7 +6,7 @@
 
     <groupId>org.storynode</groupId>
     <artifactId>pigeon</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.1.0</version>
     <licenses>
         <license>
             <name>gpl-3.0</name>
@@ -14,7 +14,13 @@
         </license>
     </licenses>
 
-    <description>A low-throw oriented library of types</description>
+    <name>Pigeon</name>
+    <description>A no-throw oriented library of types</description>
+    <url>https://github.com/sixpounder/pigeon</url>
+    <scm>
+        <url>https://github.com/sixpounder/pigeon</url>
+        <developerConnection>scm:git@github.com:sixpounder/pigeon.git</developerConnection>
+    </scm>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -46,10 +52,6 @@
             <version>3.25.3</version>
         </dependency>
     </dependencies>
-
-    <scm>
-        <developerConnection>scm:git@github.com:sixpounder/pigeon.git</developerConnection>
-    </scm>
 
     <build>
         <plugins>
@@ -109,7 +111,43 @@
                     <preparationGoals>clean verify</preparationGoals>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.3</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.13</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
 </project>

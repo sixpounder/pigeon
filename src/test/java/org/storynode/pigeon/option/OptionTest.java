@@ -1,31 +1,44 @@
 package org.storynode.pigeon.option;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.storynode.pigeon.assertion.Assertions.assertThat;
 
+import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 
 public class OptionTest {
   @Test
   void construction() {
-    Option<Integer> value = Option.some(1);
-    assertThat(value).as("Some value").isNotEmpty().isInstanceOf(Some.class);
+    assertThat(Option.some(1)).as("Some value").isNotEmpty().isInstanceOf(Some.class);
   }
 
   @Test
   void unwrap() {
-    Option<Integer> value = Option.some(1);
-    assertThat(value).as("Some value").returns(1, Option::unwrap);
+    assertThat(Option.some(1)).as("Some value").returns(1, Option::unwrap);
   }
 
   @Test
   void isSome() {
-    Option<Integer> value = Option.some(1);
-    assertThat(value).as("Some value").isNotEmpty();
+    assertThat(Option.some(1)).as("Some value").isNotEmpty();
   }
 
   @Test
   void isNone() {
-    Option<Integer> value = Option.none();
-    assertThat(value).as("Some value").isEmpty();
+    assertThat(Option.none()).as("Some value").isEmpty();
+  }
+
+  @Test
+  void orElseThrow() {
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(
+            () -> {
+              Option.none().orElseThrow(IllegalArgumentException::new);
+            });
+
+    assertThatExceptionOfType(NoSuchElementException.class)
+        .isThrownBy(
+            () -> {
+              Option.none().orElseThrow();
+            });
   }
 }

@@ -25,7 +25,7 @@ public class Metadata<T> implements Wrapped<T>, SafelyWrapped<T> {
   /**
    * Tries to create a {@link org.storynode.pigeon.wrap.Metadata} instance from another {@link
    * Wrapped} value. Since {@link org.storynode.pigeon.protocol.Wrapped#unwrap()} can fail in some
-   * implementations (like in {@link Result}) this returns a {@link
+   * implementations (like in {@link org.storynode.pigeon.result.Result}) this returns a {@link
    * org.storynode.pigeon.result.Result} containing the {@link
    * org.storynode.pigeon.error.UnwrapException} obtained when unwrapping the originally wrapped
    * value, if any is thrown. <br>
@@ -46,7 +46,7 @@ public class Metadata<T> implements Wrapped<T>, SafelyWrapped<T> {
   /**
    * Tries to create a {@link org.storynode.pigeon.wrap.Metadata} instance from another {@link
    * Wrapped} value. Since {@link org.storynode.pigeon.protocol.Wrapped#unwrap()} can fail in some
-   * implementations (like in {@link Result}) this returns a {@link
+   * implementations (like in {@link org.storynode.pigeon.result.Result}) this returns a {@link
    * org.storynode.pigeon.result.Result} containing the {@link
    * org.storynode.pigeon.error.UnwrapException} obtained when unwrapping the originally wrapped
    * value, if any is thrown. <br>

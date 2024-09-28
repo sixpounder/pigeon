@@ -22,13 +22,13 @@ import org.storynode.pigeon.tuple.Pair;
  *
  * <h3>Known variant construction</h3>
  *
- * An {@link Ok} result with the value "Hello world"
+ * An {@link org.storynode.pigeon.result.Ok} result with the value "Hello world"
  *
  * <pre>
  * {@code Result.ok("Hello world")}
  * </pre>
  *
- * An {@link Err} result with the error value set to 45D
+ * An {@link org.storynode.pigeon.result.Err} result with the error value set to 45D
  *
  * <pre>
  * {@code Result.err(45D)}
@@ -42,8 +42,8 @@ import org.storynode.pigeon.tuple.Pair;
  * {@code Result.of(() -> httpGet("https://www.wikipedia.com")).map(Response:getBody)}
  * </pre>
  *
- * This would result in an {@link Err} result with its error value set to the instance of the
- * exception caught when running the provided function
+ * This would result in an {@link org.storynode.pigeon.result.Err} result with its error value set
+ * to the instance of the exception caught when running the provided function
  *
  * <pre>
  * {@code Result.of(() -> 8 / 0)}
@@ -123,37 +123,6 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
   public abstract boolean isOk();
 
   /**
-   * Returns <code>true</code> if the result contains a value and that value satisfies a <code>
-   * predicate</code>
-   *
-   * @param predicate The predicate to satisfy
-   * @return If the value is present and satisfies the predicate
-   */
-  public boolean isOkAnd(Predicate<T> predicate) {
-    return this.isOk() && predicate.test(this.unwrap());
-  }
-
-  /**
-   * Whether this {@link org.storynode.pigeon.result.Result} is an error
-   *
-   * @return <code>true</code> if this contains an error, <code>false</code> if it contains a value
-   */
-  public boolean isError() {
-    return !this.isOk();
-  }
-
-  /**
-   * Returns <code>true</code> if the result contains an error and that error satisfies a <code>
-   * predicate</code>
-   *
-   * @param predicate The predicate to satisfy
-   * @return If the error is present and satisfies the predicate
-   */
-  public boolean isErrorAnd(Predicate<E> predicate) {
-    return this.isError() && predicate.test(this.unwrapError());
-  }
-
-  /**
    * Unwraps and return the inner value, if present. Throws an error if this result contains an
    * error. If you need a non throwing version of this method use {@link #tryUnwrap()}
    *
@@ -173,22 +142,10 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
   /**
    * Unwraps the contained value, or returns a default one if this contains an error
    *
-   * @param defaultValue The value to return in place of the error
-   * @return The contained value or the default one, depending on which is appropriate
-   */
-  public T orElse(T defaultValue) {
-    return tryUnwrap().orElse(defaultValue);
-  }
-
-  /**
-   * Unwraps the contained value, or returns a default one if this contains an error
-   *
    * @param defaultValueSupplier The supplier for the value to return in place of the error
    * @return The contained value or the default one, depending on which is appropriate
    */
-  public T orElseGet(Supplier<T> defaultValueSupplier) {
-    return tryUnwrap().orElseGet(defaultValueSupplier);
-  }
+  public abstract T orElseGet(Supplier<T> defaultValueSupplier);
 
   /**
    * {@inheritDoc}
@@ -197,13 +154,7 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
    * to always return a non-null value.
    */
   @Override
-  public @NotNull Option<T> tryUnwrap() {
-    if (this.isOk()) {
-      return Option.some(this.unwrap());
-    } else {
-      return Option.none();
-    }
-  }
+  public abstract @NotNull Option<T> tryUnwrap();
 
   /**
    * The non-throwing variant of {@link #unwrapError()}. This is guaranteed to never throw and to
@@ -212,13 +163,7 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
    * @return An {@link org.storynode.pigeon.option.Option} containing the error, or empty if there
    *     is none
    */
-  public @NotNull Option<E> tryUnwrapError() {
-    if (this.isOk()) {
-      return Option.none();
-    } else {
-      return Option.some(this.unwrapError());
-    }
-  }
+  public abstract @NotNull Option<E> tryUnwrapError();
 
   /**
    * Maps a <code>Result&lt;T, E&gt;</code> to <code>Result&lt;U, E&gt;</code> by applying a
@@ -235,13 +180,7 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
    * @return The mapped {@link org.storynode.pigeon.result.Result}
    * @param <U> The type of the new value
    */
-  public <U> Result<U, E> map(Function<T, U> fn) {
-    if (this.isOk()) {
-      return Result.ok(fn.apply(this.unwrap()));
-    } else {
-      return Result.error(this.unwrapError());
-    }
-  }
+  public abstract <U> Result<U, E> map(Function<T, U> fn);
 
   /**
    * Maps a <code>Result&lt;T, E&gt;</code> to <code>Result&lt;T, U&gt;</code> by applying a
@@ -252,12 +191,56 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
    * @return The mapped {@link org.storynode.pigeon.result.Result}
    * @param <U> The type of the new error
    */
-  public <U> Result<T, U> mapError(Function<E, U> fn) {
-    if (this.isError()) {
-      return Result.error(fn.apply(this.unwrapError()));
-    } else {
-      return Result.ok(this.unwrap());
-    }
+  public abstract <U> Result<T, U> mapError(Function<E, U> fn);
+
+  /**
+   * Executes <code>whenOk</code> if this contains a value, <code>whenError</code> otherwise.
+   *
+   * @param whenOk The function to execute when this contains a value
+   * @param whenError The function to execute when this contains an error
+   * @return this instance (for chaining)
+   */
+  public abstract Result<T, E> ifOkOrElse(Consumer<T> whenOk, Consumer<E> whenError);
+
+  /**
+   * Returns <code>true</code> if the result contains a value and that value satisfies a <code>
+   * predicate</code>
+   *
+   * @param predicate The predicate to satisfy
+   * @return If the value is present and satisfies the predicate
+   */
+  public boolean isOkAnd(Predicate<T> predicate) {
+    return this.isOk() && predicate.test(this.unwrap());
+  }
+
+  /**
+   * Whether this {@link org.storynode.pigeon.result.Result} is an error
+   *
+   * @return <code>true</code> if this contains an error, <code>false</code> if it contains a value
+   */
+  public boolean isErr() {
+    return !this.isOk();
+  }
+
+  /**
+   * Returns <code>true</code> if the result contains an error and that error satisfies a <code>
+   * predicate</code>
+   *
+   * @param predicate The predicate to satisfy
+   * @return If the error is present and satisfies the predicate
+   */
+  public boolean isErrAnd(Predicate<E> predicate) {
+    return this.isErr() && predicate.test(this.unwrapError());
+  }
+
+  /**
+   * Unwraps the contained value, or returns a default one if this contains an error
+   *
+   * @param defaultValue The value to return in place of the error
+   * @return The contained value or the default one, depending on which is appropriate
+   */
+  public T orElse(T defaultValue) {
+    return tryUnwrap().orElse(defaultValue);
   }
 
   /**
@@ -278,23 +261,6 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
    */
   public Result<T, E> ifError(Consumer<E> whenError) {
     return this.ifOkOrElse(null, whenError);
-  }
-
-  /**
-   * Executes <code>whenOk</code> if this contains a value, <code>whenError</code> otherwise.
-   *
-   * @param whenOk The function to execute when this contains a value
-   * @param whenError The function to execute when this contains an error
-   * @return this instance (for chaining)
-   */
-  public Result<T, E> ifOkOrElse(Consumer<T> whenOk, Consumer<E> whenError) {
-    if (this.isOk() && whenOk != null) {
-      whenOk.accept(this.unwrap());
-    } else if (whenError != null) {
-      whenError.accept(this.unwrapError());
-    }
-
-    return this;
   }
 
   /**
@@ -324,6 +290,6 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
 
     Result<?, ?> otherResult = (Result<?, ?>) other;
     return (otherResult.isOk() && isOk() && unwrap().equals(otherResult.unwrap()))
-        || (otherResult.isError() && isError() && unwrapError().equals(otherResult.unwrapError()));
+        || (otherResult.isErr() && isErr() && unwrapError().equals(otherResult.unwrapError()));
   }
 }

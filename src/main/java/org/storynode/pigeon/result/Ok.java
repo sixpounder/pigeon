@@ -1,25 +1,29 @@
 package org.storynode.pigeon.result;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
+import org.storynode.pigeon.option.Option;
 
 /**
- * {@link Result} variant for ok values.
+ * {@link org.storynode.pigeon.result.Result} variant for ok values.
  *
  * @see Err
  * @see Result
  * @author Andrea Coronese
  */
 public class Ok<T, E> extends Result<T, E> {
-  private final T inner;
+  private final T value;
 
   /**
    * Constructor for Ok.
    *
-   * @param inner a T object
+   * @param value a T object
    */
-  protected Ok(@NotNull T inner) {
-    this.inner = inner;
+  protected Ok(@NotNull T value) {
+    this.value = value;
   }
 
   /** {@inheritDoc} */
@@ -31,12 +35,49 @@ public class Ok<T, E> extends Result<T, E> {
   /** {@inheritDoc} */
   @Override
   public T unwrap() {
-    return inner;
+    return value;
   }
 
   /** {@inheritDoc} */
   @Override
   public E unwrapError() throws UnwrapException {
     throw new UnwrapException("Cannot unwrap error on an Ok<> value");
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public T orElseGet(Supplier<T> defaultValueSupplier) {
+    return value;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public @NotNull Option<T> tryUnwrap() {
+    return Option.some(value);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public @NotNull Option<E> tryUnwrapError() {
+    return Option.none();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<U, E> map(Function<T, U> fn) {
+    return Result.ok(fn.apply(value));
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<T, U> mapError(Function<E, U> fn) {
+    return Result.ok(value);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Result<T, E> ifOkOrElse(@NotNull Consumer<T> whenOk, Consumer<E> whenError) {
+    whenOk.accept(this.unwrap());
+    return this;
   }
 }

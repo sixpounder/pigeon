@@ -8,6 +8,8 @@
 - **Core types:**
     - `Result<T, E>`: Represents an operation's success (`Ok<T>`) or failure (`Err<E>`).
     - `Option<T>`: Encapsulates a value (`Some<T>`) or the absence of one (`None`).
+- **Utility types**:
+    - `Metadata<T>`: Decorates a type with metadata
 - **Chainable API:** Methods are designed to be easily composed and chained, leading to concise and expressive code.
 - **Explicit error handling:** Prevents silent failures and ensures all potential errors are addressed at compile time.
 - **Functional approach:** Aligns with functional programming practices, encouraging pure functions and immutability.
@@ -20,6 +22,6 @@ To use Pigeon in your project, add the following dependency to your `pom.xml` (f
 <dependency>
     <groupId>org.storynode</groupId>
     <artifactId>pigeon</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 </dependency>
 ```

@@ -1,15 +1,31 @@
 package org.storynode.pigeon.option;
 
+import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.protocol.Wrapped;
 
 /**
  * Describes a value that can be {@link org.storynode.pigeon.option.Some} value or {@link
- * org.storynode.pigeon.option.None}, indicating no value present.
+ * org.storynode.pigeon.option.None}.
+ *
+ * <h2>Why this and not {@link java.util.Optional}?</h2>
+ *
+ * <p>This implementation aims to be a - slightly - faster implementation of {@link
+ * java.util.Optional}, ditching all checks that comes at every method call that needs to assess if
+ * the value is empty or not before doing anything, in favour of fixed implementations.
+ *
+ * <p>For example: when calling {@link Option#map(Function)} it doesn't need to check if this is
+ * empty or not because {@link Option} itself is abstract, and its inheritors ({@link Some} and
+ * {@link None}) already know if they must execute the mapping function or not.
+ *
+ * <p>The same applies to a variety of other methods, so for an intensive of this type of construct
+ * using {@link Option} instead of {@link java.util.Optional} can avoid ** a lot** of condition
+ * checks (potentially).
  *
  * @param <T>
  * @author Andrea Coronese
@@ -118,6 +134,21 @@ public abstract class Option<T> implements Wrapped<T> {
   public abstract <U> Option<U> map(@NotNull Function<T, U> mapper);
 
   /**
+   * If a value is present, returns the result of applying the given {@code Optional}-bearing
+   * mapping function to the value, otherwise returns an empty {@code Optional}.
+   *
+   * <p>This method is similar to {@link #map(Function)}, but the mapping function is one whose
+   * result is already an {@code Optional}, and if invoked, {@code flatMap} does not wrap it within
+   * an additional {@code Optional}.
+   *
+   * @param <U> The type of value of the {@code Optional} returned by the mapping function
+   * @param mapper the mapping function to apply to a value, if present
+   * @return the result of applying an {@code Optional}-bearing mapping function to the value of
+   *     this {@code Optional}, if a value is present, otherwise an empty {@code Optional}
+   */
+  public abstract <U> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapper);
+
+  /**
    * If a value is present, returns the value, otherwise returns the result produced by the
    * supplying function.
    *
@@ -135,4 +166,40 @@ public abstract class Option<T> implements Wrapped<T> {
    * @return the value, if present, otherwise {@code other}
    */
   public abstract T orElse(T other);
+
+  /**
+   * If a value is present returns that value, otherwise throws {@link
+   * java.util.NoSuchElementException}. <br>
+   *
+   * <p>Please note that this is mainly for API compatibility with {@link java.util.Optional} but
+   * should be avoided in favour of {@link org.storynode.pigeon.option.Option#orElse(Object)} and
+   * {@link org.storynode.pigeon.option.Option#orElseGet(Supplier)}
+   *
+   * @return The contained value, if present
+   * @throws java.util.NoSuchElementException When the option is {@link
+   *     org.storynode.pigeon.option.None}
+   */
+  public abstract T orElseThrow() throws NoSuchElementException;
+
+  /**
+   * If a value is present returns that value, otherwise throws the supplied {@link
+   * java.lang.Throwable}. <br>
+   *
+   * <p>Please note that this is mainly for API compatibility with {@link java.util.Optional} but
+   * should be avoided in favour of {@link org.storynode.pigeon.option.Option#orElse(Object)} and
+   * {@link org.storynode.pigeon.option.Option#orElseGet(Supplier)}
+   *
+   * @param throwable The function that supplies the exception to throw
+   * @param <E> The concrete type of the {@link java.lang.Throwable}
+   * @return a T object
+   * @throws E if any.
+   */
+  public abstract <E extends Throwable> T orElseThrow(@NotNull Supplier<E> throwable) throws E;
+
+  /**
+   * stream.
+   *
+   * @return a {@link java.util.stream.Stream} object
+   */
+  public abstract Stream<T> stream();
 }

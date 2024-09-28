@@ -4,11 +4,12 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * An {@link Option} with some value in it.
+ * An {@link org.storynode.pigeon.option.Option} with some value in it.
  *
  * @see Option
  * @author Andrea Coronese
@@ -17,7 +18,7 @@ public class Some<T> extends Option<T> {
   private final T value;
 
   /**
-   * Creates an {@link Option} that has a non-null value in it
+   * Creates an {@link org.storynode.pigeon.option.Option} that has a non-null value in it
    *
    * @param value The inner value
    */
@@ -46,7 +47,13 @@ public class Some<T> extends Option<T> {
   /** {@inheritDoc} */
   @Override
   public <U> Option<U> map(@NotNull Function<T, U> mapper) {
-    return Option.some(mapper.apply(unwrap()));
+    return Option.some(mapper.apply(value));
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Option<U> flatMap(@NotNull Function<? super T, ? extends Option<? extends U>> mapper) {
+    return (Option<U>) mapper.apply(value);
   }
 
   /** {@inheritDoc} */
@@ -59,6 +66,24 @@ public class Some<T> extends Option<T> {
   @Override
   public T orElse(T other) {
     return unwrap();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public T orElseThrow() {
+    return value;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <E extends Throwable> T orElseThrow(@NotNull Supplier<E> throwable) {
+    return value;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Stream<T> stream() {
+    return Stream.of(value);
   }
 
   /**

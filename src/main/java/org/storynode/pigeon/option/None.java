@@ -1,14 +1,16 @@
 package org.storynode.pigeon.option;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
 
 /**
- * Represents an {@link Option} with no value
+ * Represents an {@link org.storynode.pigeon.option.Option} with no value
  *
  * @see Option
  * @author Andrea Coronese
@@ -66,6 +68,12 @@ public class None<T> extends Option<T> {
 
   /** {@inheritDoc} */
   @Override
+  public <U> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapper) {
+    return none();
+  }
+
+  /** {@inheritDoc} */
+  @Override
   public T orElseGet(@NotNull Supplier<T> supplier) {
     return supplier.get();
   }
@@ -74,6 +82,24 @@ public class None<T> extends Option<T> {
   @Override
   public T orElse(T other) {
     return other;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public T orElseThrow() throws NoSuchElementException {
+    throw new NoSuchElementException("No value present");
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <E extends Throwable> T orElseThrow(@NotNull Supplier<E> throwable) throws E {
+    throw throwable.get();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Stream<T> stream() {
+    return Stream.empty();
   }
 
   /** {@inheritDoc} */

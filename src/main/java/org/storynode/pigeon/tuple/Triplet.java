@@ -58,11 +58,13 @@ public final class Triplet<T1, T2, T3> extends Tuple {
     return third;
   }
 
+  /** {@inheritDoc} */
   @Override
   public int cardinality() {
     return 3;
   }
 
+  /** {@inheritDoc} */
   @Override
   public @NotNull Option<Object> at(int index) {
     return switch (index) {
@@ -73,11 +75,13 @@ public final class Triplet<T1, T2, T3> extends Tuple {
     };
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return Objects.hash(first, second, third);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Triplet["

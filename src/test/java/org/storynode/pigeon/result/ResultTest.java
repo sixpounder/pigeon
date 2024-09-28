@@ -14,7 +14,7 @@ class ResultTest {
   void ok() {
     Result<Integer, Object> obj = Result.ok(1);
     assertThat(obj.isOk()).as("State").isTrue();
-    assertThat(obj.isError()).as("State").isFalse();
+    assertThat(obj.isErr()).as("State").isFalse();
     assertThat(obj.unwrap()).isEqualTo(1);
     assertThatExceptionOfType(UnwrapException.class).isThrownBy(obj::unwrapError);
     assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isNotEmpty();
@@ -25,7 +25,7 @@ class ResultTest {
   void error() {
     Result<Object, String> obj = Result.error("Nope");
     assertThat(obj.isOk()).as("State").isFalse();
-    assertThat(obj.isError()).as("State").isTrue();
+    assertThat(obj.isErr()).as("State").isTrue();
     assertThat(obj.unwrapError()).isEqualTo("Nope");
     assertThatExceptionOfType(UnwrapException.class).isThrownBy(obj::unwrap);
     assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isEmpty();
@@ -39,7 +39,7 @@ class ResultTest {
         .isEqualTo(Result.ok("Hello world"));
     assertThat(Result.of(() -> 8 / 0))
         .as("Result from throwing supplier")
-        .returns(true, Result::isError);
+        .returns(true, Result::isErr);
   }
 
   @Test
@@ -112,11 +112,11 @@ class ResultTest {
   }
 
   @Test
-  void isErrorAnd() {
-    assertThat(Result.error("Hello world").isErrorAnd(v -> v.length() == 11))
+  void isErrAnd() {
+    assertThat(Result.error("Hello world").isErrAnd(v -> v.length() == 11))
         .as("Composited predicate on error")
         .isTrue();
-    assertThat(Result.ok("Hello world").isErrorAnd(v -> true))
+    assertThat(Result.ok("Hello world").isErrAnd(v -> true))
         .as("Composited predicate on error when ok")
         .isFalse();
   }

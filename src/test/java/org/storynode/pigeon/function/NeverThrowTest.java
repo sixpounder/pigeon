@@ -31,7 +31,7 @@ class NeverThrowTest {
                 }))
         .as("Run result")
         .isNotNull()
-        .returns(true, Result::isError)
+        .returns(true, Result::isErr)
         .returns(IllegalArgumentException.class, e -> e.unwrapError().getClass());
   }
 }

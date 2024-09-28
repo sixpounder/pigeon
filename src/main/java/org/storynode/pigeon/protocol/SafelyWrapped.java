@@ -3,6 +3,11 @@ package org.storynode.pigeon.protocol;
 import org.storynode.pigeon.error.UnwrapException;
 import org.storynode.pigeon.option.Option;
 
+/**
+ * SafelyWrapped interface.
+ *
+ * @author Andrea Coronese
+ */
 public interface SafelyWrapped<T> extends Wrapped<T> {
   /**
    * The non-throwing variant of {@link org.storynode.pigeon.protocol.Wrapped#unwrap()}. This is

@@ -71,11 +71,13 @@ public final class Quartet<T1, T2, T3, T4> extends Tuple {
     return fourth;
   }
 
+  /** {@inheritDoc} */
   @Override
   public int cardinality() {
     return 4;
   }
 
+  /** {@inheritDoc} */
   @Override
   public @NotNull Option<Object> at(int index) {
     return switch (index) {
@@ -87,11 +89,13 @@ public final class Quartet<T1, T2, T3, T4> extends Tuple {
     };
   }
 
+  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return Objects.hash(first, second, third, fourth);
   }
 
+  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Quartet["
