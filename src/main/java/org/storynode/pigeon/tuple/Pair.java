@@ -27,13 +27,11 @@ public final class Pair<T1, T2> extends Tuple {
     this.second = second;
   }
 
-  /** {@inheritDoc} */
   @Override
   public int cardinality() {
     return 2;
   }
 
-  /** {@inheritDoc} */
   @Override
   public @NotNull Option<Object> at(int index) {
     return switch (index) {
@@ -61,13 +59,11 @@ public final class Pair<T1, T2> extends Tuple {
     return second;
   }
 
-  /** {@inheritDoc} */
   @Override
   public int hashCode() {
     return Objects.hash(first, second);
   }
 
-  /** {@inheritDoc} */
   @Override
   public String toString() {
     return "Pair[" + "first=" + first + ", " + "second=" + second + ']';

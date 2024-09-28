@@ -5,9 +5,11 @@ import org.storynode.pigeon.error.UnwrapException;
 import org.storynode.pigeon.protocol.Wrapped;
 
 /**
- * Ok class.
+ * {@link Result} variant for ok values.
  *
- * @author sixpounder
+ * @see Err
+ * @see Result
+ * @author Andrea Coronese
  */
 public class Ok<T, E> extends Result<T, E> implements Wrapped<T> {
   private final T inner;

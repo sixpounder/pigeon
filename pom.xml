@@ -69,6 +69,8 @@
                 <version>3.8.0</version>
                 <configuration>
                     <doclint>all,-missing</doclint>
+                    <author>true</author>
+                    <defaultAuthor>Andrea Coronese</defaultAuthor>
                 </configuration>
                 <executions>
                     <execution>

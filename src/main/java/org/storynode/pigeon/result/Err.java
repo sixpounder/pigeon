@@ -4,9 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
 
 /**
- * Err class.
+ * {@link Result} variant for errors.
  *
- * @author sixpounder
+ * @see Result
+ * @see Ok
+ * @author Andrea Coronese
  */
 public class Err<T, E> extends Result<T, E> {
   private final E inner;

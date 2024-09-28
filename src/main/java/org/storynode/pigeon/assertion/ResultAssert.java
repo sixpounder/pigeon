@@ -1,15 +1,11 @@
-package org.storynode.pigeon.result;
+package org.storynode.pigeon.assertion;
 
 import java.util.function.Function;
 import org.assertj.core.api.AbstractAssert;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.storynode.pigeon.result.Result;
 
 public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Result<T, E>> {
-  @Contract("_ -> new")
-  public static <T, E> @NotNull ResultAssert<T, E> assertThat(Result<T, E> actual) {
-    return new ResultAssert<>(actual);
-  }
 
   public ResultAssert(Result<T, E> teResult) {
     super(teResult, ResultAssert.class);

@@ -12,7 +12,7 @@ import org.storynode.pigeon.protocol.Wrapped;
  * org.storynode.pigeon.option.None}, indicating no value present.
  *
  * @param <T>
- * @author sixpounder
+ * @author Andrea Coronese
  */
 public abstract class Option<T> implements Wrapped<T> {
   /**
@@ -42,6 +42,18 @@ public abstract class Option<T> implements Wrapped<T> {
     } else {
       return new Some<>(value);
     }
+  }
+
+  /**
+   * Creates a new {@link org.storynode.pigeon.option.Option} with some value in it. If the provided
+   * value is null then the option will be empty ({@link org.storynode.pigeon.option.None}).
+   *
+   * @param valueSupplier The supplier for the value to wrap
+   * @return The created {@link org.storynode.pigeon.option.Option}
+   * @param <T> The type of the inner value
+   */
+  public static <T> @NotNull Option<T> of(@NotNull Supplier<T> valueSupplier) {
+    return Option.of(valueSupplier.get());
   }
 
   /**

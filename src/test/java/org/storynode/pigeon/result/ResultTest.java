@@ -2,8 +2,7 @@ package org.storynode.pigeon.result;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.storynode.pigeon.option.OptionAssert.assertThat;
-import static org.storynode.pigeon.result.ResultAssert.assertThat;
+import static org.storynode.pigeon.assertion.Assertions.assertThat;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;

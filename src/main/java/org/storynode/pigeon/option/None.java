@@ -8,14 +8,14 @@ import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
 
 /**
- * Represents no value
+ * Represents an {@link Option} with no value
  *
- * @author sixpounder
+ * @see Option
+ * @author Andrea Coronese
  */
 public class None<T> extends Option<T> {
 
-  /** */
-  /** Constructor for None. */
+  /** Creates an option with no value in it */
   protected None() {
     super();
   }

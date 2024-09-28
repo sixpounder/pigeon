@@ -1,2 +1,2 @@
-/** Wrapper types */
+/** Generic wrapper types */
 package org.storynode.pigeon.wrap;

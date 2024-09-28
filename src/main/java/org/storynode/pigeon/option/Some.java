@@ -8,9 +8,10 @@ import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Some class.
+ * An {@link Option} with some value in it.
  *
- * @author sixpounder
+ * @see Option
+ * @author Andrea Coronese
  */
 public class Some<T> extends Option<T> {
   private final T value;
@@ -20,7 +21,7 @@ public class Some<T> extends Option<T> {
    *
    * @param value The inner value
    */
-  public Some(@NonNull T value) {
+  protected Some(@NonNull T value) {
     this.value = value;
   }
 

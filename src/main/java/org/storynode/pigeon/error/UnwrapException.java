@@ -3,7 +3,7 @@ package org.storynode.pigeon.error;
 /**
  * UnwrapException class.
  *
- * @author sixpounder
+ * @author Andrea Coronese
  */
 public class UnwrapException extends RuntimeException {
   /**

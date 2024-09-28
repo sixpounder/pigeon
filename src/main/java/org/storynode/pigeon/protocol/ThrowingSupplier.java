@@ -7,7 +7,7 @@ import java.util.function.Supplier;
  * A {@link java.util.function.Supplier} that allows code to throw checked exceptions
  *
  * @param <T> The type of the supplied value
- * @author sixpounder
+ * @author Andrea Coronese
  */
 @FunctionalInterface
 public interface ThrowingSupplier<T> extends Supplier<T> {
