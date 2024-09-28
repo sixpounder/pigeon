@@ -19,7 +19,8 @@
     <url>https://github.com/sixpounder/pigeon</url>
     <scm>
         <url>https://github.com/sixpounder/pigeon</url>
-        <developerConnection>scm:git@github.com:sixpounder/pigeon.git</developerConnection>
+        <connection>scm:git:https://github.com/sixpounder/pigeon</connection>
+        <developerConnection>scm:git:ssh://git@github.com/sixpounder/pigeon.git</developerConnection>
     </scm>
 
     <properties>
