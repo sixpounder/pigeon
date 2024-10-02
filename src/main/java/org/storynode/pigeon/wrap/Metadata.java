@@ -1,8 +1,5 @@
 package org.storynode.pigeon.wrap;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.function.NeverThrow;
@@ -11,6 +8,10 @@ import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.result.Result;
 import org.storynode.pigeon.tuple.Pair;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Wraps a value associating it with arbitrary metadata
  *
@@ -18,7 +19,7 @@ import org.storynode.pigeon.tuple.Pair;
  * @author Andrea Coronese
  * @since 1.0.0
  */
-public class Metadata<T> implements Wrapped<T>, SafelyWrapped<T> {
+public class Metadata<T> implements SafelyWrapped<T> {
   @Getter private final Map<Object, Object> metadata;
   private final @NotNull T inner;
 
@@ -76,19 +77,19 @@ public class Metadata<T> implements Wrapped<T>, SafelyWrapped<T> {
   }
 
   /**
-   * Constructor for Metadata.
+   * Creates a {@link Metadata} with a value and no metadata associated
    *
-   * @param value a T object
+   * @param value The wrapped value
    */
   public Metadata(@NotNull T value) {
     this(value, Map.of());
   }
 
   /**
-   * Constructor for Metadata.
+   * Creates a {@link Metadata} with a value and associated <code>metadata</code>
    *
-   * @param value a T object
-   * @param metadata a {@link java.util.Map} object
+   * @param value the wrapped value
+   * @param metadata a {@link java.util.Map} object describing the initial metadata entries
    */
   public Metadata(@NotNull T value, Map<Object, Object> metadata) {
     this.inner = value;
@@ -102,9 +103,9 @@ public class Metadata<T> implements Wrapped<T>, SafelyWrapped<T> {
   }
 
   /**
-   * toTuple.
+   * A {@link org.storynode.pigeon.tuple.Pair} composed by the value and its metadata map
    *
-   * @return a {@link org.storynode.pigeon.tuple.Pair} object
+   * @return a {@link org.storynode.pigeon.tuple.Pair} object with the value and the metadata
    */
   public Pair<T, Map<Object, Object>> toTuple() {
     return Pair.of(this.unwrap(), Map.copyOf(this.getMetadata()));

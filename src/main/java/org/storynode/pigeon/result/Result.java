@@ -54,7 +54,7 @@ import org.storynode.pigeon.tuple.Pair;
  * @author Andrea Coronese
  * @since 1.0.0
  */
-public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
+public abstract class Result<T, E> implements SafelyWrapped<T> {
 
   /**
    * Constructs an ok variant of a {@link org.storynode.pigeon.result.Result}.
@@ -180,7 +180,17 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
    * @return The mapped {@link org.storynode.pigeon.result.Result}
    * @param <U> The type of the new value
    */
-  public abstract <U> Result<U, E> map(Function<T, U> fn);
+  public abstract <U> Result<U, E> map(@NotNull Function<? super T, ? extends U> fn);
+
+  /**
+   * Like {@link Option#map(Function)} but does not re-wrap the result of the provided mapping
+   * function to a {@link Result}
+   *
+   * @param fn The mapping function to apply
+   * @return The mapped value
+   * @param <U> The type of the mapped {@link Ok} value
+   */
+  public abstract <U> Result<U, E> flatMap(@NotNull Function<? super T, ? extends Result<U, E>> fn);
 
   /**
    * Maps a <code>Result&lt;T, E&gt;</code> to <code>Result&lt;T, U&gt;</code> by applying a
@@ -191,7 +201,7 @@ public abstract class Result<T, E> implements Wrapped<T>, SafelyWrapped<T> {
    * @return The mapped {@link org.storynode.pigeon.result.Result}
    * @param <U> The type of the new error
    */
-  public abstract <U> Result<T, U> mapError(Function<E, U> fn);
+  public abstract <U> Result<T, U> mapError(Function<? super E, ? extends U> fn);
 
   /**
    * Executes <code>whenOk</code> if this contains a value, <code>whenError</code> otherwise.

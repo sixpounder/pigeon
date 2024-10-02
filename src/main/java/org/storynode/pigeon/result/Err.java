@@ -15,15 +15,15 @@ import org.storynode.pigeon.option.Option;
  * @author Andrea Coronese
  */
 public class Err<T, E> extends Result<T, E> {
-  private final E inner;
+  private final E error;
 
   /**
-   * Constructor for Err.
+   * A variant of {@link Result} that indicates an error value
    *
-   * @param inner a E object
+   * @param error The value for the 'error' result
    */
-  public Err(@NotNull E inner) {
-    this.inner = inner;
+  public Err(@NotNull E error) {
+    this.error = error;
   }
 
   /** {@inheritDoc} */
@@ -41,7 +41,7 @@ public class Err<T, E> extends Result<T, E> {
   /** {@inheritDoc} */
   @Override
   public E unwrapError() {
-    return inner;
+    return error;
   }
 
   /** {@inheritDoc} */
@@ -59,19 +59,25 @@ public class Err<T, E> extends Result<T, E> {
   /** {@inheritDoc} */
   @Override
   public @NotNull Option<E> tryUnwrapError() {
-    return Option.some(inner);
+    return Option.some(error);
   }
 
   /** {@inheritDoc} */
   @Override
-  public <U> Result<U, E> map(Function<T, U> fn) {
-    return Result.error(inner);
+  public <U> Result<U, E> map(@NotNull Function<? super T, ? extends U> fn) {
+    return Result.error(error);
   }
 
   /** {@inheritDoc} */
   @Override
-  public <U> Result<T, U> mapError(@NotNull Function<E, U> fn) {
-    return Result.error(fn.apply(inner));
+  public <U> Result<U, E> flatMap(@NotNull Function<? super T, ? extends Result<U, E>> fn) {
+    return Result.err(error);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<T, U> mapError(@NotNull Function<? super E, ? extends U> fn) {
+    return Result.error(fn.apply(error));
   }
 
   /** {@inheritDoc} */

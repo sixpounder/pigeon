@@ -18,9 +18,9 @@ public class Ok<T, E> extends Result<T, E> {
   private final T value;
 
   /**
-   * Constructor for Ok.
+   * A variant of {@link Result} that indicates a success value
    *
-   * @param value a T object
+   * @param value The value for the 'ok' result
    */
   protected Ok(@NotNull T value) {
     this.value = value;
@@ -64,13 +64,19 @@ public class Ok<T, E> extends Result<T, E> {
 
   /** {@inheritDoc} */
   @Override
-  public <U> Result<U, E> map(Function<T, U> fn) {
+  public <U> Result<U, E> map(@NotNull Function<? super T, ? extends U> fn) {
     return Result.ok(fn.apply(value));
   }
 
   /** {@inheritDoc} */
   @Override
-  public <U> Result<T, U> mapError(Function<E, U> fn) {
+  public <U> Result<U, E> flatMap(@NotNull Function<? super T, ? extends Result<U, E>> fn) {
+    return fn.apply(value);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<T, U> mapError(@NotNull Function<? super E, ? extends U> fn) {
     return Result.ok(value);
   }
 

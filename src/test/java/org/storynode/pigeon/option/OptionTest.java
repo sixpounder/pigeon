@@ -1,9 +1,13 @@
 package org.storynode.pigeon.option;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 import static org.storynode.pigeon.assertion.Assertions.assertThat;
 
 import java.util.NoSuchElementException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class OptionTest {
@@ -28,17 +32,77 @@ public class OptionTest {
   }
 
   @Test
+  void orElse() {
+    assertThat(Option.some(1)).as("Optional value").returns(1, v -> v.orElse(2));
+    assertThat(Option.none()).as("Optional value").returns(2, v -> v.orElse(2));
+  }
+
+  @Test
+  void orElseGet() {
+    assertThat(Option.some(1)).as("Optional value").returns(1, v -> v.orElseGet(() -> 2));
+    assertThat(Option.none()).as("Optional value").returns(2, v -> v.orElseGet(() -> 2));
+  }
+
+  @Test
   void orElseThrow() {
-    assertThatExceptionOfType(IllegalArgumentException.class)
+    assertThatNoException()
         .isThrownBy(
             () -> {
-              Option.none().orElseThrow(IllegalArgumentException::new);
+              var orElseThrow = Option.some(1).orElseThrow();
+              Assertions.assertThat(orElseThrow).isEqualTo(1);
             });
 
-    assertThatExceptionOfType(NoSuchElementException.class)
+    assertThatNoException()
         .isThrownBy(
             () -> {
-              Option.none().orElseThrow();
+              var orElseThrow =
+                  Option.some(1).orElseThrow(() -> new IllegalArgumentException("Sample error"));
+              Assertions.assertThat(orElseThrow).isEqualTo(1);
             });
+
+    assertThatExceptionOfType(IllegalArgumentException.class)
+        .isThrownBy(() -> Option.none().orElseThrow(IllegalArgumentException::new));
+
+    assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(Option.none()::orElseThrow);
+  }
+
+  @Test
+  void ifPresent() {
+    AtomicBoolean called = new AtomicBoolean(false);
+    Option.some(1).ifPresent(v -> called.set(true));
+    Assertions.assertThat(called).as("Modified value").isTrue();
+
+    AtomicBoolean notCalled = new AtomicBoolean(false);
+    Option.none().ifPresent(v -> notCalled.set(true));
+    Assertions.assertThat(notCalled).as("Modified value").isFalse();
+  }
+
+  @Test
+  void ifPresentOrElse() {
+    AtomicInteger value = new AtomicInteger(0);
+    Option.some(1).ifPresentOrElse(v -> value.set(1), () -> value.set(-1));
+    Assertions.assertThat(value.get()).as("Modified value").isEqualTo(1);
+
+    AtomicInteger value2 = new AtomicInteger(0);
+    Option.none().ifPresentOrElse(v -> value2.set(1), () -> value2.set(-1));
+    Assertions.assertThat(value2.get()).as("Modified value").isEqualTo(-1);
+  }
+
+  @Test
+  void map() {
+    Option<Integer> value = Option.some(2);
+    assertThat(value.map(v -> Math.pow(v, 2))).isEqualTo(Option.some(4.0));
+
+    None<Integer> noValue = Option.none();
+    assertThat(noValue.map(v -> Math.pow(v, 2))).isEqualTo(Option.none());
+  }
+
+  @Test
+  void flatMap() {
+    Option<Integer> value = Option.some(2);
+    assertThat(value.flatMap(v -> Option.some(Math.pow(v, 2)))).isEqualTo(Option.some(4.0));
+
+    None<Integer> noValue = Option.none();
+    assertThat(noValue.flatMap(v -> Option.some(Math.pow(v, 2)))).isEqualTo(Option.none());
   }
 }

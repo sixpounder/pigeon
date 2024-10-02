@@ -22,7 +22,7 @@ public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Resul
   }
 
   /**
-   * isOk.
+   * Asserts that the variant of the {@link Result} is {@link org.storynode.pigeon.result.Ok}
    *
    * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
    */
@@ -35,13 +35,28 @@ public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Resul
   }
 
   /**
-   * isError.
+   * Asserts that the variant of the {@link Result} is {@link org.storynode.pigeon.result.Ok}
+   *
+   * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
+   */
+  public ResultAssert<T, E> unwraps(T value) {
+    isNotNull();
+    isOk();
+    if (!actual.unwrap().equals(value)) {
+      failWithMessage("Expected unwrapped value to be %s but was %s", value, actual.unwrap());
+    }
+    return this;
+  }
+
+  /**
+   * Asserts that the variant of the {@link Result} is {@link org.storynode.pigeon.result.Err}
    *
    * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
    */
   public ResultAssert<T, E> isError() {
+    isNotNull();
     if (!actual.isErr()) {
-      failWithMessage("Expected to be Err() but was Ok(%s)", actual.unwrap());
+      failWithMessage("Expected to be Err() but was %s", actual);
     }
     return this;
   }
