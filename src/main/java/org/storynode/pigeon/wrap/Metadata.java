@@ -1,5 +1,8 @@
 package org.storynode.pigeon.wrap;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.function.NeverThrow;
@@ -7,10 +10,6 @@ import org.storynode.pigeon.protocol.SafelyWrapped;
 import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.result.Result;
 import org.storynode.pigeon.tuple.Pair;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Wraps a value associating it with arbitrary metadata

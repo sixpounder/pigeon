@@ -72,6 +72,11 @@ public class None<T> extends Option<T> {
     return none();
   }
 
+  @Override
+  public Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier) {
+    return supplier.get();
+  }
+
   /** {@inheritDoc} */
   @Override
   public T orElseGet(@NotNull Supplier<T> supplier) {

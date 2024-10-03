@@ -149,6 +149,17 @@ public abstract class Option<T> implements Wrapped<T> {
   public abstract <U> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapper);
 
   /**
+   * If a value is present, returns an {@link Option} describing the value, otherwise returns an
+   * {@link Option} produced by the given supplying function
+   *
+   * @param supplier The supplier that produces the {@link Option} in case a value is not present in
+   *     <code>this</code>
+   * @return An {@link Option} with the value of <code>this</code>, if any is present, or another
+   *     {@link Option} supplied by the provided supplying function
+   */
+  public abstract Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier);
+
+  /**
    * If a value is present, returns the value, otherwise returns the result produced by the
    * supplying function.
    *

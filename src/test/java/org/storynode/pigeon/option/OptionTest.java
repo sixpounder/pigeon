@@ -105,4 +105,16 @@ public class OptionTest {
     None<Integer> noValue = Option.none();
     assertThat(noValue.flatMap(v -> Option.some(Math.pow(v, 2)))).isEqualTo(Option.none());
   }
+
+  @Test
+  void or() {
+    assertThat(Option.none().or(Option::none)).as("None or none").isEqualTo(Option.none());
+    assertThat(Option.none().or(() -> Option.some(1)))
+        .as("None or value")
+        .isEqualTo(Option.some(1));
+    assertThat(Option.some("First").or(() -> Option.some("Second")))
+        .as("Value or value")
+        .isEqualTo(Option.some("First"));
+    assertThat(Option.some(10).or(Option::none)).as("Value or none").isEqualTo(Option.some(10));
+  }
 }

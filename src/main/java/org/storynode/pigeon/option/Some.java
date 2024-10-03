@@ -56,6 +56,11 @@ public class Some<T> extends Option<T> {
     return (Option<U>) mapper.apply(value);
   }
 
+  @Override
+  public Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier) {
+    return this;
+  }
+
   /** {@inheritDoc} */
   @Override
   public T orElseGet(@NotNull Supplier<T> supplier) {
