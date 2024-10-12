@@ -86,4 +86,16 @@ public class Err<T, E> extends Result<T, E> {
     whenError.accept(this.unwrapError());
     return this;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<U, E> and(Result<U, E> res) {
+    return (Result<U, E>) this;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<U, E> andThen(Function<T, Result<U, E>> res) {
+    return (Result<U, E>) this;
+  }
 }

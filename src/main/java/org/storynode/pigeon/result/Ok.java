@@ -86,4 +86,16 @@ public class Ok<T, E> extends Result<T, E> {
     whenOk.accept(this.unwrap());
     return this;
   }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<U, E> and(Result<U, E> res) {
+    return res;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public <U> Result<U, E> andThen(Function<T, Result<U, E>> res) {
+    return and(res.apply(value));
+  }
 }

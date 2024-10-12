@@ -3,6 +3,7 @@ package org.storynode.pigeon.option;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import lombok.NonNull;
@@ -42,6 +43,12 @@ public class Some<T> extends Option<T> {
   @Override
   public void ifPresentOrElse(@NotNull Consumer<T> whenPresent, Runnable otherwise) {
     whenPresent.accept(unwrap());
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public Option<T> filter(Predicate<? super T> predicate) {
+    return predicate.test(value) ? this : none();
   }
 
   /** {@inheritDoc} */

@@ -274,6 +274,31 @@ public abstract class Result<T, E> implements SafelyWrapped<T> {
   }
 
   /**
+   * Returns {@code res} if the result is {@code Ok}, otherwise returns the Err value of {@code
+   * this}. <br>
+   * Arguments passed to {@code and} are eagerly evaluated; if you are passing the result of a
+   * function call, it is recommended to use {@link Result#andThen(Function)}, which is lazily
+   * evaluated.
+   *
+   * @param res The other result
+   * @return {@code res} if this is {@code Ok}, this error otherwise
+   * @param <U> The type of the other result (if {@code Ok})
+   * @see Result#andThen(Function)
+   */
+  public abstract <U> Result<U, E> and(Result<U, E> res);
+
+  /**
+   * Like {@link Result#and(Result)} but lazily evaluated. The function is supplied the current
+   * value of the result if it's {@code Ok}
+   *
+   * @param res The other result
+   * @return {@code res} if this is {@code Ok}, this error otherwise
+   * @param <U> The type of the other result (if {@code Ok})
+   * @see Result#and(Result)
+   */
+  public abstract <U> Result<U, E> andThen(Function<T, Result<U, E>> res);
+
+  /**
    * Converts this result to a {@link org.storynode.pigeon.tuple.Pair} tuple having the value and
    * the error as fields
    *

@@ -3,6 +3,7 @@ package org.storynode.pigeon.option;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.Contract;
@@ -73,13 +74,13 @@ public abstract class Option<T> implements Wrapped<T> {
   }
 
   /**
-   * none.
+   * Creates an empty ({@code None}) {@code Option}
    *
    * @param <T> a T class
    * @return a {@link org.storynode.pigeon.option.None} object
    */
   public static <T> @NotNull None<T> none() {
-    return new None<>();
+    return (None<T>) None.INSTANCE;
   }
 
   /**
@@ -117,6 +118,17 @@ public abstract class Option<T> implements Wrapped<T> {
    * @param otherwise The function to execute if this is {@link org.storynode.pigeon.option.None}
    */
   public abstract void ifPresentOrElse(Consumer<T> whenPresent, Runnable otherwise);
+
+  /**
+   * If a value is present, and the value matches the given predicate, returns an {@code Option}
+   * describing the value, otherwise returns an empty {@code Option}.
+   *
+   * @param predicate the predicate to apply to a value, if present
+   * @return an {@code Option} describing the value of this {@code Option}, if a value is present
+   *     and the value matches the given predicate, otherwise an empty {@code Option}
+   * @throws NullPointerException if the predicate is {@code null}
+   */
+  public abstract Option<T> filter(Predicate<? super T> predicate);
 
   /**
    * If a value is present, returns an {@code Option} describing (as if by {@link #some}) the result
@@ -208,7 +220,7 @@ public abstract class Option<T> implements Wrapped<T> {
   public abstract <E extends Throwable> T orElseThrow(@NotNull Supplier<E> throwable) throws E;
 
   /**
-   * stream.
+   * Streams the contained value, if any.
    *
    * @return a {@link java.util.stream.Stream} object
    */

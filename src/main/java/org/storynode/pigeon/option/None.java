@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ import org.storynode.pigeon.error.UnwrapException;
  * @author Andrea Coronese
  */
 public class None<T> extends Option<T> {
+  protected static final Option<?> INSTANCE = new None<>();
 
   /** Creates an option with no value in it */
   protected None() {
@@ -58,6 +60,11 @@ public class None<T> extends Option<T> {
   @Override
   public void ifPresentOrElse(Consumer<T> whenPresent, @NotNull Runnable otherwise) {
     otherwise.run();
+  }
+
+  @Override
+  public Option<T> filter(Predicate<? super T> predicate) {
+    return this;
   }
 
   /** {@inheritDoc} */

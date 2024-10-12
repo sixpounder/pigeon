@@ -117,4 +117,17 @@ public class OptionTest {
         .isEqualTo(Option.some("First"));
     assertThat(Option.some(10).or(Option::none)).as("Value or none").isEqualTo(Option.some(10));
   }
+
+  @Test
+  void filter() {
+    assertThat(Option.none().filter(v -> v.equals("1"))).isNone();
+    assertThat(Option.some(1).filter(v -> v.equals(1))).isSome();
+    assertThat(Option.some(1).filter(v -> v.equals(2))).isNone();
+  }
+
+  @Test
+  void stream() {
+    Assertions.assertThat(Option.none().stream().count()).isEqualTo(0);
+    Assertions.assertThat(Option.some(1).stream().count()).isEqualTo(1);
+  }
 }

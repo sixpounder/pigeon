@@ -121,6 +121,21 @@ class ResultTest {
         .isFalse();
   }
 
+  @Test
+  void and() {
+    assertThat(Result.ok(1).and(Result.err("late error"))).isEqualTo(Result.err("late error"));
+    assertThat(Result.err("early error").and(Result.ok("foo")))
+        .isEqualTo(Result.err("early error"));
+    assertThat(Result.err("not a 1").and(Result.err("late error")))
+        .isEqualTo(Result.err("not a 1"));
+    assertThat(Result.ok(1).and(Result.ok(2))).isEqualTo(Result.ok(2));
+  }
+
+  @Test
+  void andThen() {
+    assertThat(Result.ok(2).andThen(v -> Result.ok(v * v))).isEqualTo(Result.ok(4));
+  }
+
   private class DummyThrower {
     public static Object buggedMethod() throws IOException {
       throw new IOException("Some IO error occurred here");
