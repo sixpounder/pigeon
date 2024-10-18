@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
 import org.storynode.pigeon.option.Option;
-import org.storynode.pigeon.protocol.SafelyWrapped;
 import org.storynode.pigeon.protocol.ThrowingSupplier;
 import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.tuple.Pair;
@@ -54,7 +53,7 @@ import org.storynode.pigeon.tuple.Pair;
  * @author Andrea Coronese
  * @since 1.0.0
  */
-public abstract class Result<T, E> implements SafelyWrapped<T> {
+public abstract class Result<T, E> implements Wrapped<T> {
 
   /**
    * Constructs an ok variant of a {@link org.storynode.pigeon.result.Result}.
@@ -124,7 +123,7 @@ public abstract class Result<T, E> implements SafelyWrapped<T> {
 
   /**
    * Unwraps and return the inner value, if present. Throws an error if this result contains an
-   * error. If you need a non throwing version of this method use {@link #tryUnwrap()}
+   * error.
    *
    * @return The inner value
    * @throws org.storynode.pigeon.error.UnwrapException if this contains an error
@@ -133,7 +132,7 @@ public abstract class Result<T, E> implements SafelyWrapped<T> {
 
   /**
    * Unwraps and return the inner error, if present. Throws an error if this result contains a
-   * value. If you need a non throwing version of this method use [#tryUnwrapError()]
+   * value.
    *
    * @return The inner error
    */
@@ -146,24 +145,6 @@ public abstract class Result<T, E> implements SafelyWrapped<T> {
    * @return The contained value or the default one, depending on which is appropriate
    */
   public abstract T orElseGet(Supplier<T> defaultValueSupplier);
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>The non-throwing variant of {@link Wrapped#unwrap()}. This is guaranteed to never throw and
-   * to always return a non-null value.
-   */
-  @Override
-  public abstract @NotNull Option<T> tryUnwrap();
-
-  /**
-   * The non-throwing variant of {@link #unwrapError()}. This is guaranteed to never throw and to
-   * always return a non-null value.
-   *
-   * @return An {@link org.storynode.pigeon.option.Option} containing the error, or empty if there
-   *     is none
-   */
-  public abstract @NotNull Option<E> tryUnwrapError();
 
   /**
    * Maps a <code>Result&lt;T, E&gt;</code> to <code>Result&lt;U, E&gt;</code> by applying a
@@ -213,6 +194,14 @@ public abstract class Result<T, E> implements SafelyWrapped<T> {
   public abstract Result<T, E> ifOkOrElse(Consumer<T> whenOk, Consumer<E> whenError);
 
   /**
+   * Unwraps the contained value, or returns a default one if this contains an error
+   *
+   * @param defaultValue The value to return in place of the error
+   * @return The contained value or the default one, depending on which is appropriate
+   */
+  public abstract T orElse(T defaultValue);
+
+  /**
    * Returns <code>true</code> if the result contains a value and that value satisfies a <code>
    * predicate</code>
    *
@@ -241,16 +230,6 @@ public abstract class Result<T, E> implements SafelyWrapped<T> {
    */
   public boolean isErrAnd(Predicate<E> predicate) {
     return this.isErr() && predicate.test(this.unwrapError());
-  }
-
-  /**
-   * Unwraps the contained value, or returns a default one if this contains an error
-   *
-   * @param defaultValue The value to return in place of the error
-   * @return The contained value or the default one, depending on which is appropriate
-   */
-  public T orElse(T defaultValue) {
-    return tryUnwrap().orElse(defaultValue);
   }
 
   /**

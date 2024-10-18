@@ -17,8 +17,6 @@ class ResultTest {
     assertThat(obj.isErr()).as("State").isFalse();
     assertThat(obj.unwrap()).isEqualTo(1);
     assertThatExceptionOfType(UnwrapException.class).isThrownBy(obj::unwrapError);
-    assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isNotEmpty();
-    assertThat(obj.tryUnwrapError()).as("Optionally unwrapped").isEmpty();
   }
 
   @Test
@@ -28,8 +26,6 @@ class ResultTest {
     assertThat(obj.isErr()).as("State").isTrue();
     assertThat(obj.unwrapError()).isEqualTo("Nope");
     assertThatExceptionOfType(UnwrapException.class).isThrownBy(obj::unwrap);
-    assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isEmpty();
-    assertThat(obj.tryUnwrapError()).as("Optionally unwrapped").isNotEmpty();
   }
 
   @Test
@@ -72,17 +68,6 @@ class ResultTest {
     assertThat(Result.error("THE ERROR").map(v -> "THE VALUE"))
         .as("Result::map with error")
         .returns("THE ERROR", Result::unwrapError);
-  }
-
-  @Test
-  void tryUnwraps() {
-    Result<Double, Object> obj = Result.ok(3.14D);
-    assertThat(obj.tryUnwrap()).as("Optionally unwrapped").isNotEmpty();
-    assertThat(obj.tryUnwrapError()).as("Optionally unwrapped error").isEmpty();
-
-    Result<Double, Object> obj2 = Result.error(3.14D);
-    assertThat(obj2.tryUnwrap()).as("Optionally unwrapped").isEmpty();
-    assertThat(obj2.tryUnwrapError()).as("Optionally unwrapped error").isNotEmpty();
   }
 
   @Test

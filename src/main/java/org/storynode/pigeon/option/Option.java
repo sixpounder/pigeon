@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.storynode.pigeon.protocol.Wrapped;
+import org.storynode.pigeon.protocol.SafelyWrapped;
 
 /**
  * Describes a value that can be {@link org.storynode.pigeon.option.Some} value or {@link
@@ -31,7 +31,7 @@ import org.storynode.pigeon.protocol.Wrapped;
  * @param <T>
  * @author Andrea Coronese
  */
-public abstract class Option<T> implements Wrapped<T> {
+public abstract class Option<T> implements SafelyWrapped<T> {
   /**
    * Creates a new {@link org.storynode.pigeon.option.Option} with some value in it. If the provided
    * value is null then the option will be empty ({@link org.storynode.pigeon.option.None}).

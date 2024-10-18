@@ -5,7 +5,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
-import org.storynode.pigeon.option.Option;
 
 /**
  * {@link org.storynode.pigeon.result.Result} variant for ok values.
@@ -52,18 +51,6 @@ public class Ok<T, E> extends Result<T, E> {
 
   /** {@inheritDoc} */
   @Override
-  public @NotNull Option<T> tryUnwrap() {
-    return Option.some(value);
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @NotNull Option<E> tryUnwrapError() {
-    return Option.none();
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public <U> Result<U, E> map(@NotNull Function<? super T, ? extends U> fn) {
     return Result.ok(fn.apply(value));
   }
@@ -85,6 +72,12 @@ public class Ok<T, E> extends Result<T, E> {
   public Result<T, E> ifOkOrElse(@NotNull Consumer<T> whenOk, Consumer<E> whenError) {
     whenOk.accept(this.unwrap());
     return this;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public T orElse(T defaultValue) {
+    return unwrap();
   }
 
   /** {@inheritDoc} */

@@ -130,4 +130,10 @@ public class OptionTest {
     Assertions.assertThat(Option.none().stream().count()).isEqualTo(0);
     Assertions.assertThat(Option.some(1).stream().count()).isEqualTo(1);
   }
+
+  @Test
+  void tryUnwraps() {
+    assertThat(Option.none().tryUnwrap()).isError();
+    assertThat(Option.some(2).tryUnwrap()).isOk();
+  }
 }

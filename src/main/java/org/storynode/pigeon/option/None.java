@@ -114,7 +114,15 @@ public class None<T> extends Option<T> {
     return Stream.empty();
   }
 
-  /** {@inheritDoc} */
+  /**
+   * Gets the wrapped value. This method is allowed to throw a {@link
+   * org.storynode.pigeon.error.UnwrapException} if the specific implementors requires so. <br>
+   * If you need a non-throwing version of {@code unwrap} use {@code tryUnwrap}.
+   *
+   * @return The wrapped value
+   * @throws org.storynode.pigeon.error.UnwrapException if this {@code Option} is {@link None}.
+   * @see Option#tryUnwrap()
+   */
   @Override
   public T unwrap() throws UnwrapException {
     return null;

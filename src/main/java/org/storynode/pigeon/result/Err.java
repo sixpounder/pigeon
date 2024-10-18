@@ -5,7 +5,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
-import org.storynode.pigeon.option.Option;
 
 /**
  * {@link org.storynode.pigeon.result.Result} variant for errors.
@@ -52,18 +51,6 @@ public class Err<T, E> extends Result<T, E> {
 
   /** {@inheritDoc} */
   @Override
-  public @NotNull Option<T> tryUnwrap() {
-    return Option.none();
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public @NotNull Option<E> tryUnwrapError() {
-    return Option.some(error);
-  }
-
-  /** {@inheritDoc} */
-  @Override
   public <U> Result<U, E> map(@NotNull Function<? super T, ? extends U> fn) {
     return Result.error(error);
   }
@@ -85,6 +72,11 @@ public class Err<T, E> extends Result<T, E> {
   public Result<T, E> ifOkOrElse(Consumer<T> whenOk, @NotNull Consumer<E> whenError) {
     whenError.accept(this.unwrapError());
     return this;
+  }
+
+  @Override
+  public T orElse(T defaultValue) {
+    return defaultValue;
   }
 
   /** {@inheritDoc} */

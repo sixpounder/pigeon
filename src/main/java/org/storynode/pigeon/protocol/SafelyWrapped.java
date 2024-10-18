@@ -1,7 +1,7 @@
 package org.storynode.pigeon.protocol;
 
 import org.storynode.pigeon.error.UnwrapException;
-import org.storynode.pigeon.option.Option;
+import org.storynode.pigeon.result.Result;
 
 /**
  * SafelyWrapped interface.
@@ -16,11 +16,11 @@ public interface SafelyWrapped<T> extends Wrapped<T> {
    * @return An {@link org.storynode.pigeon.option.Option} containing the value, or empty if there
    *     is none or if an error would be raised while unwrapping said value.
    */
-  default Option<T> tryUnwrap() {
+  default Result<T, ? extends Throwable> tryUnwrap() {
     try {
-      return Option.some(unwrap());
-    } catch (UnwrapException unwrapException) {
-      return Option.none();
+      return Result.ok(unwrap());
+    } catch (Exception ex) {
+      return Result.err(new UnwrapException("Cannot unwrap " + this));
     }
   }
 }
