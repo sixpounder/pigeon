@@ -104,11 +104,11 @@ public abstract class Result<T, E> implements Wrapped<T> {
    *     function execution
    * @param <T> The type of the contained value
    */
-  public static <T> @NotNull Result<T, ? extends Throwable> of(ThrowingSupplier<T> fn) {
+  public static <T, E extends Throwable> @NotNull Result<T, E> of(ThrowingSupplier<T> fn) {
     try {
       return Result.ok(fn.getWithException());
     } catch (Throwable throwable) {
-      return Result.error(throwable);
+      return (Result<T, E>) Result.error(throwable);
     }
   }
 

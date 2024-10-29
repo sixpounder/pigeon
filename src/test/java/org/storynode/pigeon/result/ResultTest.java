@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.storynode.pigeon.assertion.Assertions.assertThat;
 
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.storynode.pigeon.error.UnwrapException;
 
@@ -119,6 +120,16 @@ class ResultTest {
   @Test
   void andThen() {
     assertThat(Result.ok(2).andThen(v -> Result.ok(v * v))).isEqualTo(Result.ok(4));
+  }
+
+  @Test
+  void ifOkOrElse() {
+    AtomicInteger ok = new AtomicInteger(0);
+    Result.ok(2).ifOkOrElse(ok::set, err -> ok.set(-1));
+    assertThat(ok.get()).as("Probe value").isEqualTo(2);
+
+    Result.err(new IllegalArgumentException()).ifOkOrElse(v -> ok.set(2), err -> ok.set(-1));
+    assertThat(ok.get()).as("Probe value").isEqualTo(-1);
   }
 
   private class DummyThrower {
