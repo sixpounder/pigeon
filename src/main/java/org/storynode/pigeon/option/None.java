@@ -17,6 +17,7 @@ import org.storynode.pigeon.error.UnwrapException;
  * @author Andrea Coronese
  */
 public class None<T> extends Option<T> {
+  /** Constant <code>INSTANCE</code> */
   protected static final Option<?> INSTANCE = new None<>();
 
   /** Creates an option with no value in it */
@@ -62,6 +63,7 @@ public class None<T> extends Option<T> {
     otherwise.run();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Option<T> filter(Predicate<? super T> predicate) {
     return this;
@@ -79,6 +81,7 @@ public class None<T> extends Option<T> {
     return none();
   }
 
+  /** {@inheritDoc} */
   @Override
   public Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier) {
     return supplier.get();
@@ -115,12 +118,12 @@ public class None<T> extends Option<T> {
   }
 
   /**
-   * Gets the wrapped value. This method is allowed to throw a {@link
+   * {@inheritDoc}
+   *
+   * <p>Gets the wrapped value. This method is allowed to throw a {@link
    * org.storynode.pigeon.error.UnwrapException} if the specific implementors requires so. <br>
    * If you need a non-throwing version of {@code unwrap} use {@code tryUnwrap}.
    *
-   * @return The wrapped value
-   * @throws org.storynode.pigeon.error.UnwrapException if this {@code Option} is {@link None}.
    * @see Option#tryUnwrap()
    */
   @Override

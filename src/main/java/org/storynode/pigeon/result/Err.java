@@ -17,7 +17,7 @@ public class Err<T, E> extends Result<T, E> {
   private final E error;
 
   /**
-   * A variant of {@link Result} that indicates an error value
+   * A variant of {@link org.storynode.pigeon.result.Result} that indicates an error value
    *
    * @param error The value for the 'error' result
    */
@@ -74,6 +74,7 @@ public class Err<T, E> extends Result<T, E> {
     return this;
   }
 
+  /** {@inheritDoc} */
   @Override
   public T orElse(T defaultValue) {
     return defaultValue;

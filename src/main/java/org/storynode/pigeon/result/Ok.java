@@ -17,7 +17,7 @@ public class Ok<T, E> extends Result<T, E> {
   private final T value;
 
   /**
-   * A variant of {@link Result} that indicates a success value
+   * A variant of {@link org.storynode.pigeon.result.Result} that indicates a success value
    *
    * @param value The value for the 'ok' result
    */

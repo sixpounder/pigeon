@@ -76,7 +76,7 @@ public class Metadata<T> implements SafelyWrapped<T> {
   }
 
   /**
-   * Creates a {@link Metadata} with a value and no metadata associated
+   * Creates a {@link org.storynode.pigeon.wrap.Metadata} with a value and no metadata associated
    *
    * @param value The wrapped value
    */
@@ -85,7 +85,8 @@ public class Metadata<T> implements SafelyWrapped<T> {
   }
 
   /**
-   * Creates a {@link Metadata} with a value and associated <code>metadata</code>
+   * Creates a {@link org.storynode.pigeon.wrap.Metadata} with a value and associated <code>metadata
+   * </code>
    *
    * @param value the wrapped value
    * @param metadata a {@link java.util.Map} object describing the initial metadata entries

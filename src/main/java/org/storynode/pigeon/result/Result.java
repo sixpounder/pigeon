@@ -8,7 +8,6 @@ import java.util.function.Supplier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.error.UnwrapException;
-import org.storynode.pigeon.option.Option;
 import org.storynode.pigeon.protocol.ThrowingSupplier;
 import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.tuple.Pair;
@@ -103,7 +102,9 @@ public abstract class Result<T, E> implements Wrapped<T> {
    * @return A {@link org.storynode.pigeon.result.Result} with a value or an error, depending on the
    *     function execution
    * @param <T> The type of the contained value
+   * @param <E> a E class
    */
+  @SuppressWarnings("unchecked")
   public static <T, E extends Throwable> @NotNull Result<T, E> of(ThrowingSupplier<T> fn) {
     try {
       return Result.ok(fn.getWithException());
@@ -164,12 +165,12 @@ public abstract class Result<T, E> implements Wrapped<T> {
   public abstract <U> Result<U, E> map(@NotNull Function<? super T, ? extends U> fn);
 
   /**
-   * Like {@link Option#map(Function)} but does not re-wrap the result of the provided mapping
-   * function to a {@link Result}
+   * Like {@link org.storynode.pigeon.option.Option#map(Function)} but does not re-wrap the result
+   * of the provided mapping function to a {@link org.storynode.pigeon.result.Result}
    *
    * @param fn The mapping function to apply
    * @return The mapped value
-   * @param <U> The type of the mapped {@link Ok} value
+   * @param <U> The type of the mapped {@link org.storynode.pigeon.result.Ok} value
    */
   public abstract <U> Result<U, E> flatMap(@NotNull Function<? super T, ? extends Result<U, E>> fn);
 
@@ -256,8 +257,8 @@ public abstract class Result<T, E> implements Wrapped<T> {
    * Returns {@code res} if the result is {@code Ok}, otherwise returns the Err value of {@code
    * this}. <br>
    * Arguments passed to {@code and} are eagerly evaluated; if you are passing the result of a
-   * function call, it is recommended to use {@link Result#andThen(Function)}, which is lazily
-   * evaluated.
+   * function call, it is recommended to use {@link
+   * org.storynode.pigeon.result.Result#andThen(Function)}, which is lazily evaluated.
    *
    * @param res The other result
    * @return {@code res} if this is {@code Ok}, this error otherwise
@@ -267,8 +268,8 @@ public abstract class Result<T, E> implements Wrapped<T> {
   public abstract <U> Result<U, E> and(Result<U, E> res);
 
   /**
-   * Like {@link Result#and(Result)} but lazily evaluated. The function is supplied the current
-   * value of the result if it's {@code Ok}
+   * Like {@link org.storynode.pigeon.result.Result#and(Result)} but lazily evaluated. The function
+   * is supplied the current value of the result if it's {@code Ok}
    *
    * @param res The other result
    * @return {@code res} if this is {@code Ok}, this error otherwise

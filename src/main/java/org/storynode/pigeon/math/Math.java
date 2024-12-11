@@ -2,7 +2,11 @@ package org.storynode.pigeon.math;
 
 import lombok.experimental.UtilityClass;
 
-/** Math utilities */
+/**
+ * Math utilities
+ *
+ * @author Andrea Coronese
+ */
 @UtilityClass
 public class Math {
   /**

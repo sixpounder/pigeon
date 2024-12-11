@@ -20,13 +20,14 @@ import org.storynode.pigeon.protocol.SafelyWrapped;
  * java.util.Optional}, ditching all checks that comes at every method call that needs to assess if
  * the value is empty or not before doing anything, in favour of fixed implementations.
  *
- * <p>For example: when calling {@link Option#map(Function)} it doesn't need to check if this is
- * empty or not because {@link Option} itself is abstract, and its inheritors ({@link Some} and
- * {@link None}) already know if they must execute the mapping function or not.
+ * <p>For example: when calling {@link org.storynode.pigeon.option.Option#map(Function)} it doesn't
+ * need to check if this is empty or not because {@link org.storynode.pigeon.option.Option} itself
+ * is abstract, and its inheritors ({@link org.storynode.pigeon.option.Some} and {@link
+ * org.storynode.pigeon.option.None}) already know if they must execute the mapping function or not.
  *
  * <p>The same applies to a variety of other methods, so for an intensive of this type of construct
- * using {@link Option} instead of {@link java.util.Optional} can avoid ** a lot** of condition
- * checks (potentially).
+ * using {@link org.storynode.pigeon.option.Option} instead of {@link java.util.Optional} can avoid
+ * ** a lot** of condition checks (potentially).
  *
  * @param <T>
  * @author Andrea Coronese
@@ -79,6 +80,7 @@ public abstract class Option<T> implements SafelyWrapped<T> {
    * @param <T> a T class
    * @return a {@link org.storynode.pigeon.option.None} object
    */
+  @SuppressWarnings("unchecked")
   public static <T> @NotNull None<T> none() {
     return (None<T>) None.INSTANCE;
   }
@@ -126,7 +128,7 @@ public abstract class Option<T> implements SafelyWrapped<T> {
    * @param predicate the predicate to apply to a value, if present
    * @return an {@code Option} describing the value of this {@code Option}, if a value is present
    *     and the value matches the given predicate, otherwise an empty {@code Option}
-   * @throws NullPointerException if the predicate is {@code null}
+   * @throws java.lang.NullPointerException if the predicate is {@code null}
    */
   public abstract Option<T> filter(Predicate<? super T> predicate);
 
@@ -161,13 +163,15 @@ public abstract class Option<T> implements SafelyWrapped<T> {
   public abstract <U> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapper);
 
   /**
-   * If a value is present, returns an {@link Option} describing the value, otherwise returns an
-   * {@link Option} produced by the given supplying function
+   * If a value is present, returns an {@link org.storynode.pigeon.option.Option} describing the
+   * value, otherwise returns an {@link org.storynode.pigeon.option.Option} produced by the given
+   * supplying function
    *
-   * @param supplier The supplier that produces the {@link Option} in case a value is not present in
-   *     <code>this</code>
-   * @return An {@link Option} with the value of <code>this</code>, if any is present, or another
-   *     {@link Option} supplied by the provided supplying function
+   * @param supplier The supplier that produces the {@link org.storynode.pigeon.option.Option} in
+   *     case a value is not present in <code>this</code>
+   * @return An {@link org.storynode.pigeon.option.Option} with the value of <code>this</code>, if
+   *     any is present, or another {@link org.storynode.pigeon.option.Option} supplied by the
+   *     provided supplying function
    */
   public abstract Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier);
 

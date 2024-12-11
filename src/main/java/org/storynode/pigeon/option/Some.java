@@ -58,11 +58,13 @@ public class Some<T> extends Option<T> {
   }
 
   /** {@inheritDoc} */
+  @SuppressWarnings("unchecked")
   @Override
   public <U> Option<U> flatMap(@NotNull Function<? super T, ? extends Option<? extends U>> mapper) {
     return (Option<U>) mapper.apply(value);
   }
 
+  /** {@inheritDoc} */
   @Override
   public Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier) {
     return this;
@@ -130,12 +132,12 @@ public class Some<T> extends Option<T> {
   }
 
   /**
-   * Gets the wrapped value. This method is allowed to throw a {@link
+   * {@inheritDoc}
+   *
+   * <p>Gets the wrapped value. This method is allowed to throw a {@link
    * org.storynode.pigeon.error.UnwrapException} if the specific implementors requires so. <br>
    * If you need a non-throwing version of {@code unwrap} use {@code tryUnwrap}.
    *
-   * @return The wrapped value
-   * @throws org.storynode.pigeon.error.UnwrapException if this {@code Option} is {@link None}.
    * @see Option#tryUnwrap()
    */
   @Override

@@ -22,7 +22,8 @@ public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Resul
   }
 
   /**
-   * Asserts that the variant of the {@link Result} is {@link org.storynode.pigeon.result.Ok}
+   * Asserts that the variant of the {@link org.storynode.pigeon.result.Result} is {@link
+   * org.storynode.pigeon.result.Ok}
    *
    * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
    */
@@ -35,9 +36,11 @@ public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Resul
   }
 
   /**
-   * Asserts that the variant of the {@link Result} is {@link org.storynode.pigeon.result.Ok}
+   * Asserts that the variant of the {@link org.storynode.pigeon.result.Result} is {@link
+   * org.storynode.pigeon.result.Ok}
    *
    * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
+   * @param value a T object
    */
   public ResultAssert<T, E> unwraps(T value) {
     isNotNull();
@@ -49,7 +52,8 @@ public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Resul
   }
 
   /**
-   * Asserts that the variant of the {@link Result} is {@link org.storynode.pigeon.result.Err}
+   * Asserts that the variant of the {@link org.storynode.pigeon.result.Result} is {@link
+   * org.storynode.pigeon.result.Err}
    *
    * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
    */
@@ -62,11 +66,12 @@ public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Resul
   }
 
   /**
-   * returns.
+   * Asserts that the provided function returns {@code expected}
    *
-   * @param expected a U object
-   * @param provider a {@link java.util.function.Function} object
-   * @param <U> a U class
+   * @param expected the expected result
+   * @param provider a {@link java.util.function.Function} object that is provided with a {@link
+   *     Result} as input
+   * @param <U> the type of the expected result
    * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
    */
   public <U> ResultAssert<T, E> returns(U expected, @NotNull Function<Result<T, E>, U> provider) {

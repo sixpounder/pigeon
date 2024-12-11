@@ -6,7 +6,7 @@
 
     <groupId>org.storynode</groupId>
     <artifactId>pigeon</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
     <licenses>
         <license>
             <name>gpl-3.0</name>
@@ -144,6 +144,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>3.2.3</version>
+                <configuration>
+                    <keyname></keyname>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
