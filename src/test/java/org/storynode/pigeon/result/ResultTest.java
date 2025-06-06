@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.storynode.pigeon.assertion.Assertions.assertThat;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.storynode.pigeon.error.UnwrapException;
@@ -35,7 +36,12 @@ class ResultTest {
     assertThat(Result.of(() -> "Hello world"))
         .as("Result from supplier")
         .isEqualTo(Result.ok("Hello world"));
-    assertThat(Result.of(() -> 8 / 0))
+    assertThat(
+            Result.of(
+                () -> {
+                  int[] numbers = {1, 2, 3};
+                  return numbers[(int) Instant.now().toEpochMilli()];
+                }))
         .as("Result from throwing supplier")
         .returns(true, Result::isErr);
   }
