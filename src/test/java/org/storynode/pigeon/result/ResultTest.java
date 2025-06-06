@@ -139,7 +139,25 @@ class ResultTest {
     assertThat(Result.err(1).toTuple()).as("Tuple").isEqualTo(Tuple.of(null, 1));
   }
 
-  private class DummyThrower {
+  @Test
+  void equality() {
+    assertThat(Result.ok("Hello")).as("Result").isEqualTo(Result.ok("Hello"));
+    assertThat(Result.ok("Hello")).as("Result").isNotEqualTo(Result.ok("World"));
+    assertThat(Result.ok("Hello"))
+        .as("Result")
+        .isNotEqualTo(Result.err(new IllegalArgumentException("Ops")));
+    assertThat(Result.ok("Hello")).as("Result").isNotEqualTo(null);
+  }
+
+  @Test
+  void testHashCode() {
+    assertThat(Result.ok(1).hashCode()).as("Result hashcode").isNotZero();
+    assertThat(Result.err(new IllegalArgumentException("Ops")).hashCode())
+        .as("Result hashcode")
+        .isNotZero();
+  }
+
+  private static class DummyThrower {
     public static Object buggedMethod() throws IOException {
       throw new IOException("Some IO error occurred here");
     }
