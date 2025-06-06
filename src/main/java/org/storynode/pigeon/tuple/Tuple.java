@@ -130,7 +130,9 @@ public abstract class Tuple {
     AtomicBoolean eq = new AtomicBoolean(true);
 
     for (Pair<Object, Integer> entry : this.enumerate()) {
-      if (!entry.first().equals(otherTuple.at(entry.second()).unwrap())) {
+      var self = entry.first();
+      var otherObj = otherTuple.at(entry.second()).unwrap();
+      if (self != null && !self.equals(otherObj) || (self == null && otherObj != null)) {
         eq.set(false);
         break;
       }

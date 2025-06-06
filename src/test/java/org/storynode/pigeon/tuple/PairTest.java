@@ -42,6 +42,14 @@ class PairTest {
     assertThat(new Pair<>("Hello", "World").equals(new Pair<>("Hello", "Everyone")))
         .as("Simple inequality check")
         .isFalse();
+
+    assertThat(new Pair<>(null, "World").equals(new Pair<>(null, "World")))
+        .as("Equality check with nulls")
+        .isTrue();
+
+    assertThat(new Pair<>(null, "World").equals(new Pair<>("Hello", "Everyone")))
+        .as("Inequality check with nulls")
+        .isFalse();
   }
 
   @Test

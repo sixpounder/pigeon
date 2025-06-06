@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.storynode.pigeon.error.UnwrapException;
+import org.storynode.pigeon.tuple.Tuple;
 
 class ResultTest {
 
@@ -130,6 +131,12 @@ class ResultTest {
 
     Result.err(new IllegalArgumentException()).ifOkOrElse(v -> ok.set(2), err -> ok.set(-1));
     assertThat(ok.get()).as("Probe value").isEqualTo(-1);
+  }
+
+  @Test
+  void toTuple() {
+    assertThat(Result.ok(1).toTuple()).as("Tuple").isEqualTo(Tuple.of(1, null));
+    assertThat(Result.err(1).toTuple()).as("Tuple").isEqualTo(Tuple.of(null, 1));
   }
 
   private class DummyThrower {
