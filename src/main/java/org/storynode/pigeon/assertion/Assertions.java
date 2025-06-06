@@ -1,5 +1,6 @@
 package org.storynode.pigeon.assertion;
 
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.option.Option;
@@ -10,6 +11,7 @@ import org.storynode.pigeon.result.Result;
  *
  * @author Andrea Coronese
  */
+@UtilityClass
 public class Assertions {
   /**
    * assertThat.

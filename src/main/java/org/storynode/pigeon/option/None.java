@@ -55,7 +55,9 @@ public class None<T> extends Option<T> {
 
   /** {@inheritDoc} */
   @Override
-  public void ifPresent(Consumer<T> func) {}
+  public void ifPresent(Consumer<T> func) {
+    // By definition this does nothing
+  }
 
   /** {@inheritDoc} */
   @Override
@@ -83,7 +85,7 @@ public class None<T> extends Option<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier) {
+  public Option<T> or(@NotNull Supplier<? extends Option<T>> supplier) {
     return supplier.get();
   }
 

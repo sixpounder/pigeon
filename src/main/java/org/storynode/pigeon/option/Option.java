@@ -173,7 +173,7 @@ public abstract class Option<T> implements SafelyWrapped<T> {
    *     any is present, or another {@link org.storynode.pigeon.option.Option} supplied by the
    *     provided supplying function
    */
-  public abstract Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier);
+  public abstract Option<T> or(@NotNull Supplier<? extends Option<T>> supplier);
 
   /**
    * If a value is present, returns the value, otherwise returns the result produced by the

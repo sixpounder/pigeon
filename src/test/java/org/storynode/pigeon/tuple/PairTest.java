@@ -32,4 +32,33 @@ class PairTest {
     Pair<Integer, Integer> pair = new Pair<>(1, 2);
     assertThat(pair.second()).as("Second").isEqualTo(2);
   }
+
+  @Test
+  void equals() {
+    assertThat(new Pair<>("Hello", "World").equals(new Pair<>("Hello", "World")))
+        .as("Simple equality check")
+        .isTrue();
+
+    assertThat(new Pair<>("Hello", "World").equals(new Pair<>("Hello", "Everyone")))
+        .as("Simple inequality check")
+        .isFalse();
+  }
+
+  @Test
+  void testToString() {
+    Tuple value = new Pair<>("Hello", "World");
+    assertThat(value.toString())
+        .as("String representation")
+        .satisfies(
+            v -> {
+              for (Pair<Object, Integer> item : value.enumerate()) {
+                assertThat(v).as("String representation").contains(item.first().toString());
+              }
+            });
+  }
+
+  @Test
+  void testHashCode() {
+    assertThat(Tuple.of(1, 2).hashCode()).as("Hash code").isNotZero();
+  }
 }

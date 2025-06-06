@@ -66,7 +66,7 @@ public class Some<T> extends Option<T> {
 
   /** {@inheritDoc} */
   @Override
-  public Option<? extends T> or(@NotNull Supplier<? extends Option<? extends T>> supplier) {
+  public Option<T> or(@NotNull Supplier<? extends Option<T>> supplier) {
     return this;
   }
 

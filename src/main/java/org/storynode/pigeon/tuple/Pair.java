@@ -63,6 +63,12 @@ public final class Pair<T1, T2> extends Tuple {
 
   /** {@inheritDoc} */
   @Override
+  public boolean equals(Object o) {
+    return super.equals(o);
+  }
+
+  /** {@inheritDoc} */
+  @Override
   public int hashCode() {
     return Objects.hash(first, second);
   }

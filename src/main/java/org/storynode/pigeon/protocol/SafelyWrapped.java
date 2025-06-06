@@ -16,7 +16,7 @@ public interface SafelyWrapped<T> extends Wrapped<T> {
    * @return An {@link org.storynode.pigeon.option.Option} containing the value, or empty if there
    *     is none or if an error would be raised while unwrapping said value.
    */
-  default Result<T, ? extends Throwable> tryUnwrap() {
+  default Result<T, Throwable> tryUnwrap() {
     try {
       return Result.ok(unwrap());
     } catch (Exception ex) {

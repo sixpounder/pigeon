@@ -44,7 +44,7 @@ class TupleTest {
   void testEquals() {
     assertThat(Pair.of(1, "Hello")).isEqualTo(Pair.of(1, "Hello"));
     assertThat(Triplet.of(1, "Hello", "World")).isEqualTo(Triplet.of(1, "Hello", "World"));
-    assertThat(Triplet.of(1, "Hello", "World")).isNotEqualTo(Pair.of(1, "Hello"));
+    assertThat(Tuple.of(1, "Hello", "World")).isNotEqualTo(Tuple.of(1, "Hello"));
   }
 
   @Test
@@ -55,7 +55,7 @@ class TupleTest {
     AtomicInteger counter = new AtomicInteger();
     for (Pair<Object, Integer> entry : tuple.enumerate()) {
       var current = counter.getAndIncrement();
-      assertThat(entry.first()).as("Element value").isEqualTo(Option.of(expected[current]));
+      assertThat(entry.first()).as("Element value").isEqualTo(expected[current]);
       assertThat(entry.second()).as("Element index").isEqualTo(current);
     }
 

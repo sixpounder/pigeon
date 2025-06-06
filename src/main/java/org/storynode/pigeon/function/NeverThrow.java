@@ -25,7 +25,7 @@ public class NeverThrow {
    *     org.storynode.pigeon.option.Option} if the execution completed nominally or the error
    *     thrown if completed exceptionally.
    */
-  public static @NotNull Result<None<?>, Exception> executing(Runnable func) {
+  public static @NotNull Result<None<Void>, Exception> executing(Runnable func) {
     try {
       func.run();
       return Result.ok(none());
@@ -44,7 +44,7 @@ public class NeverThrow {
    *     return value if the execution completed nominally or the error thrown if completed
    *     exceptionally.
    */
-  public static <T> @NotNull Result<T, ? extends Throwable> executing(ThrowingSupplier<T> func) {
+  public static <T, E extends Throwable> @NotNull Result<T, E> executing(ThrowingSupplier<T> func) {
     return Result.of(func);
   }
 }

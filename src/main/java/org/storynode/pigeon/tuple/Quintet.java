@@ -105,6 +105,12 @@ public final class Quintet<T1, T2, T3, T4, T5> extends Tuple {
 
   /** {@inheritDoc} */
   @Override
+  public boolean equals(Object o) {
+    return super.equals(o);
+  }
+
+  /** {@inheritDoc} */
+  @Override
   public int hashCode() {
     return Objects.hash(first, second, third, fourth, fifth);
   }

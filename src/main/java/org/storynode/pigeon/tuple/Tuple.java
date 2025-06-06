@@ -1,6 +1,7 @@
 package org.storynode.pigeon.tuple;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -129,13 +130,19 @@ public abstract class Tuple {
     AtomicBoolean eq = new AtomicBoolean(true);
 
     for (Pair<Object, Integer> entry : this.enumerate()) {
-      if (!entry.first().equals(otherTuple.at(entry.second()))) {
+      if (!entry.first().equals(otherTuple.at(entry.second()).unwrap())) {
         eq.set(false);
         break;
       }
     }
 
     return eq.get();
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public int hashCode() {
+    return super.hashCode();
   }
 
   private static class IterableForTuple implements Iterable<Pair<Object, Integer>> {
@@ -156,8 +163,15 @@ public abstract class Tuple {
 
         @Override
         public Pair<Object, Integer> next() {
-          var item = tuple.at(i);
-          var index = i;
+          if (!this.hasNext()) {
+            throw new NoSuchElementException();
+          }
+
+          int index = i;
+
+          // We can unwrap because of the previous check
+          Object item = tuple.at(index).unwrap();
+
           i += 1;
           return new Pair<>(item, index);
         }

@@ -7,7 +7,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.storynode.pigeon.error.UnwrapException;
 import org.storynode.pigeon.protocol.ThrowingSupplier;
 import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.tuple.Pair;
@@ -108,7 +107,7 @@ public abstract class Result<T, E> implements Wrapped<T> {
   public static <T, E extends Throwable> @NotNull Result<T, E> of(ThrowingSupplier<T> fn) {
     try {
       return Result.ok(fn.getWithException());
-    } catch (Throwable throwable) {
+    } catch (Exception throwable) {
       return (Result<T, E>) Result.error(throwable);
     }
   }
@@ -121,15 +120,6 @@ public abstract class Result<T, E> implements Wrapped<T> {
    *     error
    */
   public abstract boolean isOk();
-
-  /**
-   * Unwraps and return the inner value, if present. Throws an error if this result contains an
-   * error.
-   *
-   * @return The inner value
-   * @throws org.storynode.pigeon.error.UnwrapException if this contains an error
-   */
-  public abstract T unwrap() throws UnwrapException;
 
   /**
    * Unwraps and return the inner error, if present. Throws an error if this result contains a
@@ -290,6 +280,12 @@ public abstract class Result<T, E> implements Wrapped<T> {
     } else {
       return new Pair<>(null, unwrapError());
     }
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public int hashCode() {
+    return super.hashCode();
   }
 
   /** {@inheritDoc} */

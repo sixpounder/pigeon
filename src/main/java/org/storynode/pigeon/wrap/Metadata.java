@@ -10,6 +10,7 @@ import org.storynode.pigeon.protocol.SafelyWrapped;
 import org.storynode.pigeon.protocol.Wrapped;
 import org.storynode.pigeon.result.Result;
 import org.storynode.pigeon.tuple.Pair;
+import org.storynode.pigeon.tuple.Tuple;
 
 /**
  * Wraps a value associating it with arbitrary metadata
@@ -19,7 +20,7 @@ import org.storynode.pigeon.tuple.Pair;
  * @since 1.0.0
  */
 public class Metadata<T> implements SafelyWrapped<T> {
-  @Getter private final Map<Object, Object> metadata;
+  @Getter private final Map<Object, Object> enclosedMetadata;
   private final @NotNull T inner;
 
   /**
@@ -38,7 +39,7 @@ public class Metadata<T> implements SafelyWrapped<T> {
    * @return A {@link org.storynode.pigeon.wrap.Metadata} instance with the original value that was
    *     {@link org.storynode.pigeon.protocol.Wrapped}
    */
-  public static <T> @NotNull Result<Metadata<T>, ? extends Throwable> from(
+  public static <T, E extends Throwable> @NotNull Result<Metadata<T>, E> from(
       @NotNull Wrapped<T> wrapped) {
     return Metadata.from(wrapped, Map.of());
   }
@@ -60,14 +61,14 @@ public class Metadata<T> implements SafelyWrapped<T> {
    * @return A {@link org.storynode.pigeon.wrap.Metadata} instance with the original value that was
    *     {@link org.storynode.pigeon.protocol.Wrapped}
    */
-  public static <T> @NotNull Result<Metadata<T>, ? extends Throwable> from(
+  public static <T, E extends Throwable> @NotNull Result<Metadata<T>, E> from(
       @NotNull Wrapped<T> wrapped, Map<Object, Object> additionalMetadata) {
     return NeverThrow.executing(
         () -> {
           Map<Object, Object> metadata = new HashMap<>(additionalMetadata);
 
           if (wrapped instanceof Metadata<T> asMetadata) {
-            metadata.putAll(asMetadata.getMetadata());
+            metadata.putAll(asMetadata.getEnclosedMetadata());
           }
 
           metadata = Collections.unmodifiableMap(metadata);
@@ -93,7 +94,7 @@ public class Metadata<T> implements SafelyWrapped<T> {
    */
   public Metadata(@NotNull T value, Map<Object, Object> metadata) {
     this.inner = value;
-    this.metadata = Map.copyOf(metadata);
+    this.enclosedMetadata = Map.copyOf(metadata);
   }
 
   /** {@inheritDoc} */
@@ -108,6 +109,6 @@ public class Metadata<T> implements SafelyWrapped<T> {
    * @return a {@link org.storynode.pigeon.tuple.Pair} object with the value and the metadata
    */
   public Pair<T, Map<Object, Object>> toTuple() {
-    return Pair.of(this.unwrap(), Map.copyOf(this.getMetadata()));
+    return Tuple.of(this.unwrap(), Map.copyOf(this.getEnclosedMetadata()));
   }
 }
