@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class OptionTest {
+class OptionTest {
   @Test
   void construction() {
     assertThat(Option.some(1)).as("Some value").isNotEmpty().isInstanceOf(Some.class);
@@ -127,7 +127,7 @@ public class OptionTest {
 
   @Test
   void stream() {
-    Assertions.assertThat(Option.none().stream().count()).isEqualTo(0);
+    Assertions.assertThat(Option.none().stream().count()).isZero();
     Assertions.assertThat(Option.some(1).stream().count()).isEqualTo(1);
   }
 

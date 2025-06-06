@@ -6,7 +6,7 @@ import static org.storynode.pigeon.option.Option.some;
 
 import org.junit.jupiter.api.Test;
 
-public class SomeTest {
+class SomeTest {
   @Test
   void equality() {
     assertThat(some(Double.valueOf("1"))).as("Some value").isEqualTo(some(Double.valueOf("1")));

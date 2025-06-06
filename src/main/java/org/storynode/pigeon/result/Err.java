@@ -1,5 +1,6 @@
 package org.storynode.pigeon.result;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -90,5 +91,20 @@ public class Err<T, E> extends Result<T, E> {
   @Override
   public <U> Result<U, E> andThen(Function<T, Result<U, E>> res) {
     return (Result<U, E>) this;
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    Err<?, ?> err = (Err<?, ?>) o;
+    return Objects.equals(error, err.error);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), error);
   }
 }

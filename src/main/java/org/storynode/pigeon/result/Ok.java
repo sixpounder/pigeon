@@ -1,5 +1,6 @@
 package org.storynode.pigeon.result;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -90,5 +91,20 @@ public class Ok<T, E> extends Result<T, E> {
   @Override
   public <U> Result<U, E> andThen(Function<T, Result<U, E>> res) {
     return and(res.apply(value));
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    Ok<?, ?> ok = (Ok<?, ?>) o;
+    return Objects.equals(value, ok.value);
+  }
+
+  /** {@inheritDoc} */
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), value);
   }
 }
