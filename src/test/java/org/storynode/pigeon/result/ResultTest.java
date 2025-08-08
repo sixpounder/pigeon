@@ -16,17 +16,15 @@ class ResultTest {
   @Test
   void ok() {
     Result<Integer, Object> obj = Result.ok(1);
-    assertThat(obj.isOk()).as("State").isTrue();
-    assertThat(obj.isErr()).as("State").isFalse();
-    assertThat(obj.unwrap()).isEqualTo(1);
+    assertThat(obj).as("Result").isOk();
+    assertThat(obj).as("Result").unwraps(1);
     assertThatExceptionOfType(UnwrapException.class).isThrownBy(obj::unwrapError);
   }
 
   @Test
   void error() {
     Result<Object, String> obj = Result.error("Nope");
-    assertThat(obj.isOk()).as("State").isFalse();
-    assertThat(obj.isErr()).as("State").isTrue();
+    assertThat(obj).as("Result").isError();
     assertThat(obj.unwrapError()).isEqualTo("Nope");
     assertThatExceptionOfType(UnwrapException.class).isThrownBy(obj::unwrap);
   }

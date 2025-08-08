@@ -37,7 +37,7 @@ public class ResultAssert<T, E> extends AbstractAssert<ResultAssert<T, E>, Resul
 
   /**
    * Asserts that the variant of the {@link org.storynode.pigeon.result.Result} is {@link
-   * org.storynode.pigeon.result.Ok}
+   * org.storynode.pigeon.result.Ok} and contains a specific <code>value</code>
    *
    * @return a {@link org.storynode.pigeon.assertion.ResultAssert} object
    * @param value a T object
