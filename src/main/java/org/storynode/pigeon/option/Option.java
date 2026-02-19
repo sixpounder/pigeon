@@ -113,11 +113,10 @@ public abstract class Option<T> implements SafelyWrapped<T> {
 
   /**
    * Executes <code>whenPresent</code> if this is {@link org.storynode.pigeon.option.Some},
-   * consuming the contained value, or runs <code>otherwise</code> if this is {@link
-   * org.storynode.pigeon.option.None}
+   * consuming the contained value, or runs <code>otherwise</code> if this is {@link None}.
    *
-   * @param whenPresent The function to execute if this is {@link org.storynode.pigeon.option.Some}
-   * @param otherwise The function to execute if this is {@link org.storynode.pigeon.option.None}
+   * @param whenPresent The function to execute if this is {@link Some}
+   * @param otherwise The function to execute if this is {@link None}
    */
   public abstract void ifPresentOrElse(Consumer<T> whenPresent, Runnable otherwise);
 

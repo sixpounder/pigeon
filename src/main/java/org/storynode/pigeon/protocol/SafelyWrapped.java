@@ -4,8 +4,10 @@ import org.storynode.pigeon.error.UnwrapException;
 import org.storynode.pigeon.result.Result;
 
 /**
- * SafelyWrapped interface.
+ * The SafelyWrapped interface extends the {@link Wrapped} interface and provides a mechanism to
+ * safely access the wrapped value without the risk of throwing exceptions.
  *
+ * @param <T> The type of the value being wrapped.
  * @author Andrea Coronese
  */
 public interface SafelyWrapped<T> extends Wrapped<T> {

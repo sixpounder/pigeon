@@ -7,7 +7,7 @@ import org.storynode.pigeon.option.Option;
 import org.storynode.pigeon.result.Result;
 
 /**
- * Assertions class.
+ * Utility class providing assertion methods for Option and Result types.
  *
  * @author Andrea Coronese
  */

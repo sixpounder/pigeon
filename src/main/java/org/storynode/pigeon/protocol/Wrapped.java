@@ -11,8 +11,8 @@ import org.storynode.pigeon.error.UnwrapException;
  */
 public interface Wrapped<T> {
   /**
-   * Gets the wrapped value. This method is allowed to throw a {@link
-   * org.storynode.pigeon.error.UnwrapException} if the specific implementors requires so.
+   * Gets the wrapped value. This method is allowed to throw a {@link UnwrapException} if the
+   * implementor requires so.
    *
    * @return The wrapped value
    * @throws org.storynode.pigeon.error.UnwrapException if any.
