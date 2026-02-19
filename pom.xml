@@ -4,7 +4,7 @@
 
     <groupId>org.storynode</groupId>
     <artifactId>pigeon</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.5.1</version>
     <licenses>
         <license>
             <name>gpl-3.0</name>
@@ -19,7 +19,7 @@
         <url>https://github.com/sixpounder/pigeon</url>
         <connection>scm:git:https://github.com/sixpounder/pigeon</connection>
         <developerConnection>scm:git:ssh://git@github.com/sixpounder/pigeon.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>pigeon-0.5.1</tag>
   </scm>
     <developers>
         <developer>
