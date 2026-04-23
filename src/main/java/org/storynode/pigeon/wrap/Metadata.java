@@ -3,7 +3,6 @@ package org.storynode.pigeon.wrap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.storynode.pigeon.function.NeverThrow;
 import org.storynode.pigeon.protocol.SafelyWrapped;
@@ -20,7 +19,7 @@ import org.storynode.pigeon.tuple.Tuple;
  * @since 1.0.0
  */
 public class Metadata<T> implements SafelyWrapped<T> {
-  @Getter private final Map<Object, Object> enclosedMetadata;
+  private final Map<Object, Object> enclosedMetadata;
   private final @NotNull T inner;
 
   /**
@@ -101,6 +100,11 @@ public class Metadata<T> implements SafelyWrapped<T> {
   @Override
   public T unwrap() {
     return inner;
+  }
+
+  @SuppressWarnings("lombok")
+  public Map<Object, Object> getEnclosedMetadata() {
+    return enclosedMetadata;
   }
 
   /**
