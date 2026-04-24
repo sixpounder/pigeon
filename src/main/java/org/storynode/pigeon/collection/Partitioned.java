@@ -11,12 +11,15 @@ import org.storynode.pigeon.option.Option;
 import org.storynode.pigeon.result.Result;
 
 /**
- * A collection that automatically partition its values based on a partitioning function
+ * A collection that automatically partition its values based on a partitioning function, designed
+ * for performance.
  *
  * @param <K> The type of key returned by the partitioning function
- * @param <V> The type of values held in each partition
+ * @param <V> The type of values held in each partition. Values must be {@link Comparable} with each
+ *     other.
  */
-public class Partitioned<K, V> implements Iterable<Partitioned.Partition<K, V>> {
+public class Partitioned<K, V extends Comparable<V>>
+    implements Iterable<Partitioned.Partition<K, V>> {
   private final Map<K, Collection<V>> partitions;
   private final Function<V, K> partitioner;
 
@@ -64,7 +67,7 @@ public class Partitioned<K, V> implements Iterable<Partitioned.Partition<K, V>> 
     K maybePartitionKey = partitioner.apply(value);
     Collection<V> partition = partitions.get(maybePartitionKey);
     if (partition == null) {
-      partition = new ArrayList<>(1);
+      partition = new TreeSet<>(Comparator.naturalOrder());
       partition.add(value);
       partitions.put(maybePartitionKey, partition);
       return true;
@@ -117,7 +120,7 @@ public class Partitioned<K, V> implements Iterable<Partitioned.Partition<K, V>> 
    * @return <code>true</code> if the value is found, <code>false</code> otherwise
    */
   public boolean containsValue(V value) {
-    return partitions.values().stream().flatMap(Collection::stream).anyMatch(v -> v.equals(value));
+    return values().contains(value);
   }
 
   /**
@@ -197,7 +200,9 @@ public class Partitioned<K, V> implements Iterable<Partitioned.Partition<K, V>> 
   }
 
   public @NotNull Collection<V> values() {
-    return partitions.values().stream().flatMap(Collection::stream).toList();
+    return partitions.values().stream()
+        .flatMap(Collection::stream)
+        .collect(TreeSet::new, TreeSet::add, TreeSet::addAll);
   }
 
   public @NotNull Set<Partition<K, V>> entrySet() {
@@ -227,19 +232,21 @@ public class Partitioned<K, V> implements Iterable<Partitioned.Partition<K, V>> 
   }
 
   @Contract("_, _ -> new")
-  public static <K, V> @NotNull Partitioned<K, V> by(
+  public static <K, V extends Comparable<V>> @NotNull Partitioned<K, V> by(
       Function<V, K> partitioner, Collection<V> values) {
     return new Partitioned<>(partitioner, values);
   }
 
   @Contract("_ -> new")
-  public static <K, V> @NotNull Partitioned<K, V> by(Function<V, K> partitioner) {
+  public static <K, V extends Comparable<V>> @NotNull Partitioned<K, V> by(
+      Function<V, K> partitioner) {
     return by(partitioner, null);
   }
 
   public record Partition<K, V>(K key, Collection<V> values) {}
 
-  public static class PartitionIterator<K, V> implements Iterator<Partitioned.Partition<K, V>> {
+  public static class PartitionIterator<K, V extends Comparable<V>>
+      implements Iterator<Partitioned.Partition<K, V>> {
     private final Iterator<K> keysIterator;
     private final Partitioned<K, V> owner;
 
