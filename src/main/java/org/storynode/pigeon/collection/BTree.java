@@ -250,15 +250,17 @@ public class BTree<K extends Comparable<K>, V> implements Iterable<BTree.Node<K,
     if (!x.leaf) traverse(x.children[i], out);
   }
 
+  /**
+   * Collects they keys in the tree and returns them
+   *
+   * @return All the keys in the tree
+   */
   public java.util.Set<K> keySet() {
     java.util.Set<K> set = new java.util.HashSet<>();
     for (Node<K, V> node : this) {
       for (int i = 0; i < node.n; i++) {
         K key = node.keys[i].key;
-        if (!set.add(key)) {
-          throw new IllegalStateException(
-              "Duplicate key encountered during keySet collection: " + key);
-        }
+        set.add(key);
       }
     }
     return set;

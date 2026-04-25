@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.storynode.pigeon.assertion.Assertions;
@@ -82,8 +83,10 @@ class BTreeTest {
     // the tree
     BTree<Integer, Integer> tree =
         new BTree<>(3, Map.of(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10));
-    assertThatNoException().isThrownBy(tree::keySet);
-    assertThat(tree.keySet()).hasSize(10);
+
+    Set<Integer> keys = tree.keySet();
+    assertThat(keys).hasSize(tree.traverse().size());
+    assertThat(keys).isEqualTo(Set.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
   }
 
   @Test
