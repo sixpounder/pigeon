@@ -77,6 +77,16 @@ class BTreeTest {
   }
 
   @Test
+  void noDuplicates() {
+    // Basic sanity again: each key should be present only once across
+    // the tree
+    BTree<Integer, Integer> tree =
+        new BTree<>(3, Map.of(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10));
+    assertThatNoException().isThrownBy(tree::keySet);
+    assertThat(tree.keySet()).hasSize(10);
+  }
+
+  @Test
   void testEmptyTreeBehavior() {
     BTree<Integer, String> empty = new BTree<>(3);
     Assertions.assertThat(empty.search(1)).isNone();
@@ -85,7 +95,7 @@ class BTreeTest {
 
   @Test
   void printTree() {
-    assertThatNoException()
-        .isThrownBy(() -> new BTree<>(3, Map.of(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7)));
+    BTree<Integer, Integer> tree = new BTree<>(3, Map.of(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7));
+    assertThatNoException().isThrownBy(tree::printTree);
   }
 }
