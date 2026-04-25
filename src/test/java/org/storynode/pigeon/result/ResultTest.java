@@ -6,6 +6,7 @@ import static org.storynode.pigeon.assertion.Assertions.assertThat;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 import org.storynode.pigeon.error.UnwrapException;
@@ -144,6 +145,20 @@ class ResultTest {
   }
 
   @Test
+  void ifOk() {
+    AtomicInteger ok = new AtomicInteger(0);
+    Result.ok(1).ifOk(ok::set);
+    assertThat(ok.get()).as("Probe value").isEqualTo(1);
+  }
+
+  @Test
+  void ifError() {
+    AtomicInteger error = new AtomicInteger(0);
+    Result.err(new IllegalArgumentException()).ifError(e -> error.set(-1));
+    assertThat(error.get()).as("Probe value").isEqualTo(-1);
+  }
+
+  @Test
   void equality() {
     assertThat(Result.ok("Hello")).as("Result").isEqualTo(Result.ok("Hello"));
     assertThat(Result.ok("Hello")).as("Result").isNotEqualTo(Result.ok("World"));
@@ -151,6 +166,11 @@ class ResultTest {
         .as("Result")
         .isNotEqualTo(Result.err(new IllegalArgumentException("Ops")));
     assertThat(Result.ok("Hello")).as("Result").isNotEqualTo(null);
+
+    Result<String, Object> r = Result.ok("Hello");
+    assertThat(r).as("Same result equality").isEqualTo(r);
+
+    assertThat(r).as("Different class equality").isNotEqualTo(List.of());
   }
 
   @Test

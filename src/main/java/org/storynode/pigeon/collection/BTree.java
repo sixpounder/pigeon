@@ -73,7 +73,7 @@ public class BTree<K extends Comparable<K>, V> {
     }
   }
 
-  public static class Node<K extends Comparable<K>, V> {
+  private static class Node<K extends Comparable<K>, V> {
     int n; // number of keys
     Entry<K, V>[] keys; // length 2t-1
     Node<K, V>[] children; // length 2t

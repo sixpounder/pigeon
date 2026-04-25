@@ -1,6 +1,7 @@
 package org.storynode.pigeon.collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -80,5 +81,11 @@ class BTreeTest {
     BTree<Integer, String> empty = new BTree<>(3);
     Assertions.assertThat(empty.search(1)).isNone();
     assertThat(empty.traverse()).isEmpty();
+  }
+
+  @Test
+  void printTree() {
+    assertThatNoException()
+        .isThrownBy(() -> new BTree<>(3, Map.of(1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7)));
   }
 }
