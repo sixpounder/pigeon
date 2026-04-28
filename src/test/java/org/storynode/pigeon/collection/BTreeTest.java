@@ -21,6 +21,17 @@ class BTreeTest {
   }
 
   @Test
+  void defaultConstructor() {
+    BTree<Integer, String> bt = new BTree<>();
+    assertThat(bt.isEmpty()).isTrue();
+  }
+
+  @Test
+  void isEmpty() {
+    assertThat(bt.isEmpty()).isFalse();
+  }
+
+  @Test
   void testInsertAndSearch() {
     Assertions.assertThat(bt.search(10)).isSome().returns("ten", Option::unwrap);
     Assertions.assertThat(bt.search(20)).isSome().returns("twenty", Option::unwrap);

@@ -241,6 +241,16 @@ public class BTree<K extends Comparable<K>, V> implements Iterable<BTree.Node<K,
     return list;
   }
 
+  public boolean isEmpty() {
+    for (Node<K, V> node : this) {
+      if (node.n > 0) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   private void traverse(@NotNull Node<K, V> x, List<Entry<K, V>> out) {
     int i;
     for (i = 0; i < x.n; i++) {
